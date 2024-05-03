@@ -9,7 +9,7 @@ export class Level {
   @Column()
   name: string;
 
-  @OneToMany(() => Subscription, subscription => subscription.level, { nullable: false })
+  @OneToMany(() => Subscription, subscription => subscription.level)
   subscriptions: Subscription[];
 
   @Column()

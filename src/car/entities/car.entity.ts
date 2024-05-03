@@ -28,7 +28,7 @@ export class Car {
   @JoinColumn()
   subscription: Subscription;
 
-  @OneToMany(() => Event, event => event.car, { nullable: false })
+  @OneToMany(() => Event, event => event.car)
   events: Event[];
 
   @Column()

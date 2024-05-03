@@ -26,7 +26,7 @@ export class Event {
   @ManyToOne(() => Terminal, terminal => terminal.events, { nullable: false })
   terminal: Terminal;
 
-  @OneToMany(() => Invoice, invoice => invoice.event, { nullable: false })
+  @OneToMany(() => Invoice, invoice => invoice.event)
   invoices: Invoice[];
 
   @Column()

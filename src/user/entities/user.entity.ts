@@ -30,11 +30,11 @@ export class User {
   @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
+  @OneToMany(() => Car, car => car.user)
+  cars: Car[];
+
   @Column()
   createdAt: Date;
-
-  @OneToMany(() => Car, car => car.user, { nullable: false })
-  cars: Car[];
 
   @BeforeInsert()
   hashPassword(): void {

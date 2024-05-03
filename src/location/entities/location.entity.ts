@@ -60,7 +60,7 @@ export class Location {
   @Column()
   createdAt: Date;
 
-  @OneToMany(() => Terminal, terminal => terminal.location, { nullable: false })
+  @OneToMany(() => Terminal, terminal => terminal.location)
   terminals: Terminal[];
 
   @BeforeInsert()

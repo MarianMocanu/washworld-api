@@ -28,7 +28,7 @@ export class Terminal {
   @ManyToOne(() => Location, location => location.terminals, { nullable: false })
   location: Location;
 
-  @OneToMany(() => Event, event => event.terminal, { nullable: false })
+  @OneToMany(() => Event, event => event.terminal)
   events: Event[];
 
   @Column()

@@ -24,7 +24,7 @@ export class Subscription {
   @ManyToOne(() => Level, level => level.subscriptions, { nullable: false })
   level: Level;
 
-  @OneToMany(() => Invoice, invoice => invoice.subscription, { nullable: false })
+  @OneToMany(() => Invoice, invoice => invoice.subscription)
   invoices: Invoice[];
 
   @Column()

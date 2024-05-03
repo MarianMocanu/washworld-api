@@ -41,7 +41,7 @@ export class Service {
   @JoinTable({ name: 'services_terminals' })
   terminals: Terminal[];
 
-  @OneToMany(() => Event, event => event.service, { nullable: false })
+  @OneToMany(() => Event, event => event.service)
   events: Event[];
 
   @Column()
