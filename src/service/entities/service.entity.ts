@@ -1,3 +1,4 @@
+import { Level } from 'src/levels/entities/level.entity';
 import { Step } from 'src/steps/entities/step.entity';
 import {
   BeforeInsert,
@@ -36,4 +37,8 @@ export class Service {
   @ManyToMany(() => Step)
   @JoinTable({ name: 'services_steps' })
   steps: Step[];
+
+  @ManyToMany(() => Level)
+  @JoinTable({ name: 'services_levels' })
+  levels: Level[];
 }
