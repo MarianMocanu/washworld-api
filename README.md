@@ -113,8 +113,4 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-Nest is [MIT licensed](LICENSE).
-
-```
-
-```
+WashWorld API is [MIT licensed](LICENSE).
