@@ -1,5 +1,6 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Car } from 'src/car/entities/car.entity';
 
 export enum Role {
   USER = 'user',
@@ -31,6 +32,9 @@ export class User {
 
   @Column()
   createdAt: Date;
+
+  @OneToMany(() => Car, car => car.user, { nullable: false })
+  cars: Car[];
 
   @BeforeInsert()
   hashPassword(): void {

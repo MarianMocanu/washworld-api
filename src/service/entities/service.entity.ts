@@ -1,11 +1,14 @@
+import { Event } from 'src/event/entities/event.entity';
 import { Level } from 'src/levels/entities/level.entity';
 import { Step } from 'src/steps/entities/step.entity';
+import { Terminal } from 'src/terminal/entities/terminal.entity';
 import {
   BeforeInsert,
   Column,
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -26,14 +29,6 @@ export class Service {
   @Column()
   price: number;
 
-  @Column()
-  createdAt: Date;
-
-  @BeforeInsert()
-  addCreatedAt() {
-    this.createdAt = new Date();
-  }
-
   @ManyToMany(() => Step)
   @JoinTable({ name: 'services_steps' })
   steps: Step[];
@@ -41,4 +36,19 @@ export class Service {
   @ManyToMany(() => Level)
   @JoinTable({ name: 'services_levels' })
   levels: Level[];
+
+  @ManyToMany(() => Terminal)
+  @JoinTable({ name: 'services_terminals' })
+  terminals: Terminal[];
+
+  @OneToMany(() => Event, event => event.service, { nullable: false })
+  events: Event[];
+
+  @Column()
+  createdAt: Date;
+
+  @BeforeInsert()
+  addCreatedAt() {
+    this.createdAt = new Date();
+  }
 }

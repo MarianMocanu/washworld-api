@@ -1,4 +1,5 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Subscription } from 'src/subscription/entities/subscription.entity';
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Level {
@@ -7,6 +8,9 @@ export class Level {
 
   @Column()
   name: string;
+
+  @OneToMany(() => Subscription, subscription => subscription.level, { nullable: false })
+  subscriptions: Subscription[];
 
   @Column()
   createdAt: Date;

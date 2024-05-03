@@ -1,4 +1,5 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Terminal } from 'src/terminal/entities/terminal.entity';
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum Status {
   available = 'available',
@@ -58,6 +59,9 @@ export class Location {
 
   @Column()
   createdAt: Date;
+
+  @OneToMany(() => Terminal, terminal => terminal.location, { nullable: false })
+  terminals: Terminal[];
 
   @BeforeInsert()
   addCreatedAt(): void {
