@@ -41,6 +41,7 @@ To set up this project locally, please follow these steps:
    POSTGRES_USER=<your_postgres_username>
    POSTGRES_PASSWORD=<your_postgres_password>
    POSTGRES_DB=<your_database_name>
+   NODE_ENV=development
    ```
 
    Replace `<your_postgres_username>`, `<your_postgres_password>`, `<your_database_name>` with your actual PostgreSQL credentials and `<your-secret>` with a secure secret.
