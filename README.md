@@ -56,7 +56,7 @@ To set up this project locally, please follow these steps:
    Ensure you have Docker and Docker Compose installed on your machine. Then, run the following command to start the PostgreSQL Docker container:
 
    ```bash
-   docker-compose -p cbs-postgresql up -d
+   docker-compose -p washworld-postgres up -d
    ```
 
    This command will start a Docker container with PostgreSQL using the settings defined in your `docker-compose.yml` file.
