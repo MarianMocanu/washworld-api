@@ -23,7 +23,8 @@
     "db:migration": "npm run typeorm -- migration:generate",
     "db:migrate": "npm run typeorm -- migration:run",
     "db:revert": "npm run typeorm -- migration:revert",
-    "db:show": "npm run typeorm -- migration:show"
+    "db:show": "npm run typeorm -- migration:show",
+    "start:dev:auto": "git pull && npm install && npm run db:migrate && npm run db:seed && npm run start:dev"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
