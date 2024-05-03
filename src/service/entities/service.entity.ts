@@ -1,4 +1,12 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Step } from 'src/steps/entities/step.entity';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum ServiceType {
   auto = 'auto',
@@ -24,4 +32,8 @@ export class Service {
   addCreatedAt() {
     this.createdAt = new Date();
   }
+
+  @ManyToMany(() => Step)
+  @JoinTable({ name: 'services_steps' })
+  steps: Step[];
 }
