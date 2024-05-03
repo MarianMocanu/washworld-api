@@ -1,5 +1,5 @@
-<p align="center" style="background-color:black; padding:10px;">
-  <a href="http://nestjs.com/" target="blank"><img src="https://washworld.dk/assets/brand/logo.svg" width="200" alt="Nest Logo" /></a>
+<p align="center">
+  <a href="http://washworld.dk/" target="blank"><img src="./washworld-logo.svg" width="200" alt="WashWorld Logo" /></a>
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
