@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
+  constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
+
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    const newUser = this.userRepository.create(createUserDto);
+    return this.userRepository.save(newUser);
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<User> {
+    const foundUser = await this.userRepository.findOneBy({ id });
+    return foundUser;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOneByEmail(email: string): Promise<User> {
+    const foundUser = await this.userRepository.findOneBy({ email });
+    return foundUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: number, updateUserDto: Partial<UpdateUserDto>): Promise<UpdateResult> {
+    const foundUser = await this.userRepository.findOneBy({ id });
+    if (!foundUser) {
+      throw new NotFoundException('User not found');
+    }
+    return this.userRepository.update(id, updateUserDto);
+  }
+
+  async remove(id: number): Promise<DeleteResult> {
+    const foundUser = await this.userRepository.findOneBy({ id });
+    if (!foundUser) {
+      throw new NotFoundException('User not found');
+    }
+    return this.userRepository.delete(id);
   }
 }
