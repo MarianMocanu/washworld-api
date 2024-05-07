@@ -7,6 +7,7 @@ export class CreateUserDto {
     this.email = email;
     this.password = password;
   }
+
   @IsString()
   @IsNotEmpty()
   firstName: string;

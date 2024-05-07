@@ -49,13 +49,27 @@ export class User {
   @BeforeInsert()
   normalizeFirstName(): void {
     const name = this.firstName.trim();
-    this.firstName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    const names = name.split(' ');
+    names.forEach((name, index) => {
+      names[index] = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    });
+    this.firstName = names.join(' ');
   }
 
   @BeforeInsert()
   normalizeLastName(): void {
     const name = this.lastName.trim();
-    this.lastName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    const names = name.split(' ');
+    names.forEach((name, index) => {
+      names[index] = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    });
+    this.lastName = names.join(' ');
+  }
+
+  @BeforeInsert()
+  normalizeEmail(): void {
+    const email = this.email.trim();
+    this.email = email.toLowerCase();
   }
 
   comparePassword(password: string): boolean {
