@@ -1,32 +1,46 @@
 import { IsString, IsNotEmpty, IsEmail, IsBoolean, IsOptional, IsEnum } from 'class-validator';
 import { Car } from 'src/car/entities/car.entity';
-import { User, Role } from '../entities/user.entity';
+import { Role } from '../entities/user.entity';
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  constructor(user: User) {
+  constructor(
+    firstName?: string,
+    lastName?: string,
+    email?: string,
+    password?: string,
+    isActive?: boolean,
+    role?: Role,
+    cars?: Car[],
+  ) {
     super();
-    this.role = user.role;
-    this.cars = user.cars;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
+    this.isActive = isActive;
+    this.role = role;
+    this.cars = cars;
   }
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   firstName: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   lastName: string;
 
+  @IsOptional()
   @IsEmail()
   @IsString()
-  @IsNotEmpty()
   email: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   password: string;
 
+  @IsOptional()
   @IsBoolean()
   isActive: boolean;
 

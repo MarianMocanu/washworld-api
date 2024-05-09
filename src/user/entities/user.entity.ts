@@ -1,4 +1,11 @@
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Car } from 'src/car/entities/car.entity';
 
@@ -36,6 +43,7 @@ export class User {
   @Column()
   createdAt: Date;
 
+  @BeforeUpdate()
   @BeforeInsert()
   hashPassword(): void {
     this.password = bcrypt.hashSync(this.password, 10);
@@ -46,6 +54,7 @@ export class User {
     this.createdAt = new Date();
   }
 
+  @BeforeUpdate()
   @BeforeInsert()
   normalizeFirstName(): void {
     const name = this.firstName.trim();
@@ -56,6 +65,7 @@ export class User {
     this.firstName = names.join(' ');
   }
 
+  @BeforeUpdate()
   @BeforeInsert()
   normalizeLastName(): void {
     const name = this.lastName.trim();
@@ -65,7 +75,7 @@ export class User {
     });
     this.lastName = names.join(' ');
   }
-
+  @BeforeUpdate()
   @BeforeInsert()
   normalizeEmail(): void {
     const email = this.email.trim();
