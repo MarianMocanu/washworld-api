@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateLevelDto } from './dto/create-level.dto';
-import { UpdateLevelDto } from './dto/update-level.dto';
+// import { UpdateLevelDto } from './dto/update-level.dto';
+import { Level } from './entities/level.entity';
 
 @Injectable()
 export class LevelsService {
-  create(createLevelDto: CreateLevelDto) {
-    return 'This action adds a new level';
+  constructor(
+    @InjectRepository(Level)
+    private readonly levelRepository: Repository<Level>,
+  ) {}
+
+  async create(createLevelDto: CreateLevelDto): Promise<Level> {
+    const newLevel = this.levelRepository.create(createLevelDto);
+    return await this.levelRepository.save(newLevel);
   }
 
-  findAll() {
-    return `This action returns all levels`;
+  async findAll(): Promise<Level[]> {
+    return await this.levelRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} level`;
-  }
+  // async findOne(id: number): Promise<Level> {
+  //   return await this.levelRepository.findOne(id);
+  // }
 
-  update(id: number, updateLevelDto: UpdateLevelDto) {
-    return `This action updates a #${id} level`;
-  }
+  // async update(id: number, updateLevelDto: UpdateLevelDto): Promise<Level> {
+  //   await this.levelRepository.update(id, updateLevelDto);
+  //   return await this.levelRepository.findOne(id);
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} level`;
+  async remove(id: number): Promise<void> {
+    await this.levelRepository.delete(id);
   }
 }
