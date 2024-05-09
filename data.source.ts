@@ -14,7 +14,7 @@ export const dbConfig: TypeOrmModuleOptions = {
   synchronize: false,
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/src/migrations/*{.ts,.js}'],
-  autoLoadEntities: true,
+  autoLoadEntities: process.env.NODE_ENV === 'test',
 };
 
 const dataSource = new DataSource(dbConfig as DataSourceOptions);
