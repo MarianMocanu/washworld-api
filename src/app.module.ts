@@ -12,6 +12,7 @@ import { TerminalModule } from './terminal/terminal.module';
 import { EventModule } from './event/event.module';
 import { CarModule } from './car/car.module';
 import { InvoicesModule } from './invoices/invoices.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { InvoicesModule } from './invoices/invoices.module';
     EventModule,
     CarModule,
     InvoicesModule,
+    AuthModule,
   ],
   controllers: [],
 })
