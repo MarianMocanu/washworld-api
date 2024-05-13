@@ -21,6 +21,7 @@
     "typeorm": "npm run build && npx typeorm -d dist/data.source.js",
     "db:seed:admin": "ts-node -r tsconfig-paths/register ./src/seeds/admin.ts",
     "db:seed:levels": "ts-node -r tsconfig-paths/register ./src/seeds/levels.ts",
+    "db:seed:steps": "ts-node -r tsconfig-paths/register ./src/seeds/steps.ts",
     "db:migration": "npm run typeorm -- migration:generate",
     "db:migrate": "npm run typeorm -- migration:run",
     "db:revert": "npm run typeorm -- migration:revert",
