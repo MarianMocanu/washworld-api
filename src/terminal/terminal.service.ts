@@ -28,8 +28,15 @@ export class TerminalService {
     });
   }
 
-  findOneByLocationId(locationId: number): Promise<Terminal[]> {
-    return this.terminalRepository.find({ where: { location: { id: locationId } } });
+  findAllByServiceId(serviceId: number): Promise<Terminal[]> {
+    return this.terminalRepository.find({
+      where: { services: { id: serviceId } },
+      relations: ['services'],
+    });
+  }
+
+  findAllByLocationId(locationId: number): Promise<Terminal[]> {
+    return this.terminalRepository.find({ where: { locationId } });
   }
 
   // async update(id: number, updateTerminalDto: Partial<UpdateTerminalDto>): Promise<Terminal> {
