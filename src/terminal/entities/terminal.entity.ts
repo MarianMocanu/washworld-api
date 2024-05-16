@@ -1,5 +1,5 @@
 import { Event } from 'src/event/entities/event.entity';
-import { Location } from 'src/location/entities/location.entity';
+import { Location } from 'src/locations/entities/location.entity';
 import {
   BeforeInsert,
   BeforeUpdate,

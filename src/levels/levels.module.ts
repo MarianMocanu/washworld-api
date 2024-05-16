@@ -11,7 +11,7 @@ import { User } from 'src/user/entities/user.entity';
 import { Service } from 'src/service/entities/service.entity';
 import { Step } from 'src/steps/entities/step.entity';
 import { Terminal } from 'src/terminal/entities/terminal.entity';
-import { Location } from 'src/location/entities/location.entity';
+import { Location } from 'src/locations/entities/location.entity';
 
 @Module({
   imports: [
