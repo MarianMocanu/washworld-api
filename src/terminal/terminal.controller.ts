@@ -3,14 +3,14 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  // Patch,
   Param,
   Delete,
   BadRequestException,
 } from '@nestjs/common';
 import { TerminalService } from './terminal.service';
 import { CreateTerminalDto } from './dto/create-terminal.dto';
-import { UpdateTerminalDto } from './dto/update-terminal.dto';
+// import { UpdateTerminalDto } from './dto/update-terminal.dto';
 
 @Controller('terminal')
 export class TerminalController {
@@ -32,11 +32,11 @@ export class TerminalController {
     return this.terminalService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTerminalDto: UpdateTerminalDto) {
-    this.validateTerminalId(id);
-    return this.terminalService.update(+id, updateTerminalDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateTerminalDto: UpdateTerminalDto) {
+  //   this.validateTerminalId(id);
+  //   return this.terminalService.update(+id, updateTerminalDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

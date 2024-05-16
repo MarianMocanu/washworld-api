@@ -1,12 +1,9 @@
-import { IsArray, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
-import { Location } from 'src/location/entities/location.entity';
+import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { TerminalStatus } from '../entities/terminal.entity';
-import { Event } from 'src/event/entities/event.entity';
+
 export class CreateTerminalDto {
-  constructor(status: TerminalStatus, location: Location, events: Event[]) {
-    this.status = status;
-    this.location = location;
-    this.events = events;
+  constructor(partial: Partial<CreateTerminalDto>) {
+    Object.assign(this, partial);
   }
 
   @IsNotEmpty()
@@ -14,11 +11,6 @@ export class CreateTerminalDto {
   status: TerminalStatus;
 
   @IsNotEmpty()
-  @IsEnum(Location)
-  location: Location;
-
-  @IsOptional()
-  @IsArray()
-  @IsEnum(Event, { each: true })
-  events: Event[];
+  @IsNumber()
+  locationId: number;
 }

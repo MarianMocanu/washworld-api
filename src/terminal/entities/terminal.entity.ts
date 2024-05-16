@@ -1,10 +1,13 @@
 import { Event } from 'src/event/entities/event.entity';
 import { Location } from 'src/locations/entities/location.entity';
+import { Service } from 'src/service/entities/service.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -17,6 +20,11 @@ export enum TerminalStatus {
   closed = 'closed',
 }
 
+export enum TerminalType {
+  automatic = 'automatic',
+  manual = 'maual',
+}
+
 @Entity()
 export class Terminal {
   @PrimaryGeneratedColumn()
@@ -24,6 +32,9 @@ export class Terminal {
 
   @Column({ type: 'enum', enum: TerminalStatus, default: TerminalStatus.idle })
   status: TerminalStatus;
+
+  @Column()
+  locationId: number;
 
   @ManyToOne(() => Location, location => location.terminals, { nullable: false })
   location: Location;
@@ -36,11 +47,17 @@ export class Terminal {
 
   @Column()
   updatedAt: Date;
+
+  @ManyToMany(() => Service, service => service.terminals)
+  @JoinTable({ name: 'services_terminals' })
+  services: Service[];
+
   @BeforeInsert()
   addCreatedAt() {
     this.createdAt = new Date();
   }
 
+  @BeforeInsert()
   @BeforeUpdate()
   addUpdatedAt() {
     this.updatedAt = new Date();
