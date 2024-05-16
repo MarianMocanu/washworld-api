@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTerminalDto } from './dto/create-terminal.dto';
 import { UpdateTerminalDto } from './dto/update-terminal.dto';
-
+import { DeleteResult, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Terminal } from './entities/terminal.entity';
 @Injectable()
 export class TerminalService {
-  create(createTerminalDto: CreateTerminalDto) {
-    return 'This action adds a new terminal';
+  constructor(@InjectRepository(Terminal) private terminalRepository: Repository<Terminal>) {}
+
+  async create(createTerminalDto: CreateTerminalDto) {
+    const newTerminal = this.terminalRepository.create(createTerminalDto);
+    return this.terminalRepository.save(newTerminal);
   }
 
-  findAll() {
-    return `This action returns all terminal`;
+  findAll(): Promise<Terminal[]> {
+    return this.terminalRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} terminal`;
+  findOne(id: number): Promise<Terminal> {
+    return this.terminalRepository.findOneBy({ id });
   }
 
-  update(id: number, updateTerminalDto: UpdateTerminalDto) {
-    return `This action updates a #${id} terminal`;
+  findOneByLocationId(locationId: number): Promise<Terminal[]> {
+    return this.terminalRepository.find({ where: { location: { id: locationId } } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} terminal`;
+  async update(id: number, updateTerminalDto: Partial<UpdateTerminalDto>): Promise<Terminal> {
+    const foundTerminal = this.terminalRepository.findOneBy({ id });
+    if (!foundTerminal) {
+      throw new NotFoundException('Terminal not found');
+    }
+
+    const terminalToSave = this.terminalRepository.create({
+      ...foundTerminal,
+      ...updateTerminalDto,
+    });
+    return await this.terminalRepository.save(terminalToSave);
+  }
+
+  remove(id: number): Promise<DeleteResult> {
+    const foundTerminal = this.terminalRepository.findOneBy({ id });
+    if (!foundTerminal) {
+      throw new NotFoundException('Terminal not found');
+    }
+    return this.terminalRepository.delete(id);
   }
 }
