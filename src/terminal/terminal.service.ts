@@ -4,6 +4,7 @@ import { CreateTerminalDto } from './dto/create-terminal.dto';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Terminal } from './entities/terminal.entity';
+import { UpdateTerminalDto } from './dto/update-terminal.dto';
 @Injectable()
 export class TerminalService {
   constructor(
@@ -39,18 +40,18 @@ export class TerminalService {
     return this.terminalRepository.find({ where: { locationId } });
   }
 
-  // async update(id: number, updateTerminalDto: Partial<UpdateTerminalDto>): Promise<Terminal> {
-  //   const foundTerminal = this.terminalRepository.findOneBy({ id });
-  //   if (!foundTerminal) {
-  //     throw new NotFoundException('Terminal not found');
-  //   }
+  async update(id: number, updateTerminalDto: UpdateTerminalDto) {
+    const foundTerminal = this.terminalRepository.findOneBy({ id });
+    if (!foundTerminal) {
+      throw new NotFoundException('Terminal not found');
+    }
 
-  //   const terminalToSave = this.terminalRepository.create({
-  //     ...foundTerminal,
-  //     ...updateTerminalDto,
-  //   });
-  //   return await this.terminalRepository.save(terminalToSave);
-  // }
+    const terminalToSave = this.terminalRepository.create({
+      ...foundTerminal,
+      ...updateTerminalDto,
+    });
+    return await this.terminalRepository.save(terminalToSave);
+  }
 
   remove(id: number): Promise<DeleteResult> {
     const foundTerminal = this.terminalRepository.findOneBy({ id });
