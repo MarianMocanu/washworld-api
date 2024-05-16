@@ -6,6 +6,7 @@ import { TerminalService } from 'src/terminal/terminal.service';
 
 describe('Terminal Controller (e2e)', () => {
   let app: INestApplication;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let terminalService: TerminalService;
 
   beforeAll(async () => {
