@@ -18,6 +18,9 @@ interface OpeningHours {
 }
 
 export class CreateLocationDto {
+  constructor(partial: Partial<CreateLocationDto>) {
+    Object.assign(this, partial);
+  }
   @IsDefined()
   @IsString()
   @IsNotEmpty()
