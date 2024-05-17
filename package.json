@@ -23,6 +23,7 @@
     "db:seed:levels": "ts-node -r tsconfig-paths/register ./src/seeds/levels.ts",
     "db:seed:steps": "ts-node -r tsconfig-paths/register ./src/seeds/steps.ts",
     "db:seed:locations": "ts-node -r tsconfig-paths/register ./src/seeds/locations.ts",
+    "db:seed": "npm run db:seed:admin && npm run db:seed:levels && npm run db:seed:steps && npm run db:seed:locations",
     "db:migration": "npm run typeorm -- migration:generate",
     "db:migrate": "npm run typeorm -- migration:run",
     "db:revert": "npm run typeorm -- migration:revert",

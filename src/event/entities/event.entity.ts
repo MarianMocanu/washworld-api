@@ -40,6 +40,7 @@ export class Event {
   @Column()
   updatedAt: Date;
 
+  @BeforeInsert()
   @BeforeUpdate()
   addUpdatedAt() {
     this.updatedAt = new Date();
