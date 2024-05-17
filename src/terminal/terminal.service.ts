@@ -1,26 +1,63 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTerminalDto } from './dto/create-terminal.dto';
+// import { UpdateTerminalDto } from './dto/update-terminal.dto';
+import { DeleteResult, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Terminal } from './entities/terminal.entity';
 import { UpdateTerminalDto } from './dto/update-terminal.dto';
-
 @Injectable()
 export class TerminalService {
-  create(createTerminalDto: CreateTerminalDto) {
-    return 'This action adds a new terminal';
+  constructor(
+    @InjectRepository(Terminal) private readonly terminalRepository: Repository<Terminal>,
+  ) {}
+
+  async create(createTerminalDto: CreateTerminalDto): Promise<Terminal> {
+    const newTerminal = this.terminalRepository.create(createTerminalDto);
+    return await this.terminalRepository.save(newTerminal);
   }
 
-  findAll() {
-    return `This action returns all terminal`;
+  findAll(): Promise<Terminal[]> {
+    return this.terminalRepository.find({
+      relations: ['services'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} terminal`;
+  findOne(id: number): Promise<Terminal> {
+    return this.terminalRepository.findOne({
+      where: { id },
+      relations: ['services'],
+    });
   }
 
-  update(id: number, updateTerminalDto: UpdateTerminalDto) {
-    return `This action updates a #${id} terminal`;
+  findAllByServiceId(serviceId: number): Promise<Terminal[]> {
+    return this.terminalRepository.find({
+      where: { services: { id: serviceId } },
+      relations: ['services'],
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} terminal`;
+  findAllByLocationId(locationId: number): Promise<Terminal[]> {
+    return this.terminalRepository.find({ where: { locationId } });
+  }
+
+  async update(id: number, updateTerminalDto: UpdateTerminalDto) {
+    const foundTerminal = this.terminalRepository.findOneBy({ id });
+    if (!foundTerminal) {
+      throw new NotFoundException('Terminal not found');
+    }
+
+    const terminalToSave = this.terminalRepository.create({
+      ...foundTerminal,
+      ...updateTerminalDto,
+    });
+    return await this.terminalRepository.save(terminalToSave);
+  }
+
+  remove(id: number): Promise<DeleteResult> {
+    const foundTerminal = this.terminalRepository.findOneBy({ id });
+    if (!foundTerminal) {
+      throw new NotFoundException('Terminal not found');
+    }
+    return this.terminalRepository.delete(id);
   }
 }
