@@ -1,15 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 
-@Controller('event')
+@Controller('events')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Post()
   create(@Body() createEventDto: CreateEventDto) {
-    return this.eventService.create(createEventDto);
+    this.eventService.create(createEventDto);
   }
 
   @Get()
@@ -19,16 +28,25 @@ export class EventController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    this.validateEventId(id);
     return this.eventService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
+    this.validateEventId(id);
     return this.eventService.update(+id, updateEventDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
+    this.validateEventId(id);
     return this.eventService.remove(+id);
+  }
+
+  validateEventId(id: string) {
+    if (isNaN(+id)) {
+      throw new BadRequestException('Event id is not a number');
+    }
   }
 }
