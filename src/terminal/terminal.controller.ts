@@ -12,7 +12,7 @@ import { TerminalService } from './terminal.service';
 import { CreateTerminalDto } from './dto/create-terminal.dto';
 // import { UpdateTerminalDto } from './dto/update-terminal.dto';
 
-@Controller('terminal')
+@Controller('terminals')
 export class TerminalController {
   constructor(private readonly terminalService: TerminalService) {}
 
@@ -32,6 +32,12 @@ export class TerminalController {
     return this.terminalService.findOne(+id);
   }
 
+  @Get('/location/:id')
+  findAllByLocationId(@Param('id') id: string) {
+    this.validateTerminalId(id);
+    return this.terminalService.findOne(+id);
+  }
+
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateTerminalDto: UpdateTerminalDto) {
   //   this.validateTerminalId(id);
@@ -46,7 +52,7 @@ export class TerminalController {
 
   validateTerminalId(id: string) {
     if (isNaN(+id)) {
-      throw new BadRequestException('User id is not a number');
+      throw new BadRequestException('Terminal ID is not a number');
     }
   }
 }
