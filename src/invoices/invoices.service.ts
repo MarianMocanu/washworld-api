@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Invoice } from './entities/invoice.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class InvoicesService {
-  create(createInvoiceDto: CreateInvoiceDto) {
-    return 'This action adds a new invoice';
+  constructor(
+    @InjectRepository(Invoice)
+    private readonly invoiceRepository: Repository<Invoice>,
+  ) {}
+
+  async create(createInvoiceDto: CreateInvoiceDto) {
+    const newInvoice = this.invoiceRepository.create(createInvoiceDto);
+    return await this.invoiceRepository.save(newInvoice);
   }
 
   findAll() {
-    return `This action returns all invoices`;
+    return this.invoiceRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`;
+  async findOne(id: number) {
+    const foundInvoice = await this.invoiceRepository.findOneBy({ id });
+    if (!foundInvoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+    return foundInvoice;
   }
 
-  update(id: number, updateInvoiceDto: UpdateInvoiceDto) {
-    return `This action updates a #${id} invoice`;
+  async update(id: number, updateInvoiceDto: UpdateInvoiceDto) {
+    const foundInvoice = await this.invoiceRepository.findOneBy({ id });
+    if (!foundInvoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+    const updatedInvoice = this.invoiceRepository.create({ ...foundInvoice, ...updateInvoiceDto });
+    return this.invoiceRepository.save(updatedInvoice);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} invoice`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} invoice`;
+  // }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, BadRequestException } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
@@ -19,16 +19,23 @@ export class InvoicesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    this.validateInvoiceId(id);
     return this.invoicesService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateInvoiceDto: UpdateInvoiceDto) {
+    this.validateInvoiceId(id);
     return this.invoicesService.update(+id, updateInvoiceDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.invoicesService.remove(+id);
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.invoicesService.remove(+id);
+  // }
+  validateInvoiceId(id: string) {
+    if (isNaN(+id)) {
+      throw new BadRequestException('Invoice id is not a number');
+    }
   }
 }
