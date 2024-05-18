@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateLevelDto } from './dto/create-level.dto';
@@ -21,9 +21,13 @@ export class LevelsService {
     return await this.levelRepository.find();
   }
 
-  // async findOne(id: number): Promise<Level> {
-  //   return await this.levelRepository.findOne(id);
-  // }
+  async findOne(id: number): Promise<Level> {
+    const level = await this.levelRepository.findOne({ where: { id } });
+    if (!level) {
+      throw new NotFoundException('Level not found');
+    }
+    return level;
+  }
 
   // async update(id: number, updateLevelDto: UpdateLevelDto): Promise<Level> {
   //   await this.levelRepository.update(id, updateLevelDto);
