@@ -39,6 +39,7 @@ export class Subscription {
   }
 
   @BeforeUpdate()
+  @BeforeInsert()
   addUpdatedAt() {
     this.updatedAt = new Date();
   }
