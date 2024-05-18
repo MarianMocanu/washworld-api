@@ -1,26 +1,71 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Subscription } from './entities/subscription.entity';
+import { Level } from 'src/levels/entities/level.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SubscriptionService {
-  create(createSubscriptionDto: CreateSubscriptionDto) {
-    return 'This action adds a new subscription';
+  constructor(
+    @InjectRepository(Subscription)
+    private readonly subscriptionRepository: Repository<Subscription>,
+    @InjectRepository(Level)
+    private readonly levelRepository: Repository<Level>,
+  ) {}
+
+  async create(createSubscriptionDto: CreateSubscriptionDto) {
+    const level = await this.levelRepository.findOne({
+      where: { id: createSubscriptionDto.levelId },
+    });
+    if (!level) {
+      throw new NotFoundException('Level not found');
+    }
+    const newSubscription = this.subscriptionRepository.create({
+      ...createSubscriptionDto,
+      level,
+    });
+    return await this.subscriptionRepository.save(newSubscription);
   }
 
   findAll() {
-    return `This action returns all subscription`;
+    return this.subscriptionRepository.find({ relations: ['level'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} subscription`;
+  async findOne(id: number) {
+    const foundSubscription = await this.subscriptionRepository.findOne({
+      where: { id },
+      relations: ['level'],
+    });
+    if (!foundSubscription) {
+      throw new NotFoundException('Subscription not found');
+    }
+    return foundSubscription;
   }
 
-  update(id: number, updateSubscriptionDto: UpdateSubscriptionDto) {
-    return `This action updates a #${id} subscription`;
+  async update(id: number, updateSubscriptionDto: UpdateSubscriptionDto) {
+    const foundSubscription = await this.subscriptionRepository.findOne({
+      where: { id },
+      relations: ['level'],
+    });
+    if (!foundSubscription) {
+      throw new NotFoundException('Subscription not found');
+    }
+    const level = await this.levelRepository.findOne({
+      where: { id: updateSubscriptionDto.levelId },
+    });
+    if (!level) {
+      throw new NotFoundException('Level not found');
+    }
+    const updatedSubscription = this.subscriptionRepository.merge(foundSubscription, {
+      ...updateSubscriptionDto,
+      level,
+    });
+    return this.subscriptionRepository.save(updatedSubscription);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} subscription`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} subscription`;
+  // }
 }

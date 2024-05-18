@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, BadRequestException } from '@nestjs/common';
 import { LevelsService } from './levels.service';
 import { CreateLevelDto } from './dto/create-level.dto';
 // import { UpdateLevelDto } from './dto/update-level.dto';
@@ -17,10 +17,11 @@ export class LevelsController {
     return this.levelsService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.levelsService.findOne(+id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    this.validateLevelId(id);
+    return this.levelsService.findOne(+id);
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateLevelDto: UpdateLevelDto) {
@@ -30,5 +31,11 @@ export class LevelsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.levelsService.remove(+id);
+  }
+
+  validateLevelId(id: string) {
+    if (isNaN(+id)) {
+      throw new BadRequestException('Level id is not a number');
+    }
   }
 }
