@@ -20,19 +20,19 @@ describe('Terminal Controller (e2e)', () => {
     await app.init();
   });
 
-  describe('/terminal (GET)', () => {
+  describe('/terminals (GET)', () => {
     it('should return 200 and an array of terminals', async () => {
-      const response = await request(app.getHttpServer()).get('/terminal');
+      const response = await request(app.getHttpServer()).get('/terminals');
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeDefined();
       expect(Array.isArray(response.body)).toBe(true);
     });
   });
 
-  describe('/terminal (POST)', () => {
+  describe('/terminals (POST)', () => {
     it('should return 400 status code if invalid data', async () => {
       const invalidTerminal = { status: 'invalid', location: 'XD' };
-      const response = await request(app.getHttpServer()).post('/terminal').send(invalidTerminal);
+      const response = await request(app.getHttpServer()).post('/terminals').send(invalidTerminal);
       expect(response.statusCode).toBe(400);
     });
 
