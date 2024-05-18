@@ -43,6 +43,7 @@ export class Car {
   }
 
   @BeforeUpdate()
+  @BeforeInsert()
   addUpdatedAt() {
     this.updatedAt = new Date();
   }
