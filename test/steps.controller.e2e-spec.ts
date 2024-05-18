@@ -36,7 +36,12 @@ describe('Step Controller (e2e)', () => {
     });
 
     it('should return 201 and the new step after creation', async () => {
-      const validStep = { name: 'TestStep', order: 999, description: 'This is a test step' };
+      const validStep = {
+        name: 'TestStep',
+        order: 999,
+        description: 'This is a test step',
+        duration: 60,
+      };
       const response = await request(app.getHttpServer()).post('/steps').send(validStep);
 
       expect(response.statusCode).toBe(201);
