@@ -28,7 +28,7 @@ describe('Car Controller (e2e)', () => {
       expect(Array.isArray(response.body)).toBe(true);
     });
   });
-
+  // FIXME:
   //   describe('/cars/id (GET)', () => {
   //     it('should return a car based on its id', async () => {
   //       const newCar = new CreateCarDto();
@@ -63,7 +63,7 @@ describe('Car Controller (e2e)', () => {
       const response = await request(app.getHttpServer()).post('/cars').send(invalidCar);
       expect(response.statusCode).toBe(400);
     });
-
+    // FIXME:
     // it('should return 201 and the new car after creation', async () => {
     //   const newCar = {
     //     plateNumber: 'EF456GH',
