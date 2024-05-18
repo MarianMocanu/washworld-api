@@ -15,6 +15,9 @@ export class Step {
   description: string;
 
   @Column()
+  duration: number;
+
+  @Column()
   createdAt: Date;
 
   @BeforeInsert()
