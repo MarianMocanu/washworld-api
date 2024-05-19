@@ -11,6 +11,7 @@ import {
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('cars')
 export class CarController {

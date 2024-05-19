@@ -30,5 +30,6 @@ import { Location } from 'src/locations/entities/location.entity';
   ],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

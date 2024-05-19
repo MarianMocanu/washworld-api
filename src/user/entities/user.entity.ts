@@ -40,18 +40,27 @@ export class User {
   @OneToMany(() => Car, car => car.user)
   cars: Car[];
 
-  @Column()
-  createdAt: Date;
-
   @BeforeUpdate()
   @BeforeInsert()
   hashPassword(): void {
     this.password = bcrypt.hashSync(this.password, 10);
   }
 
+  @Column()
+  createdAt: Date;
+
   @BeforeInsert()
   setCreatedAt(): void {
     this.createdAt = new Date();
+  }
+
+  @Column()
+  updatedAt: Date;
+
+  @BeforeUpdate()
+  @BeforeInsert()
+  setUpdatedAt(): void {
+    this.updatedAt = new Date();
   }
 
   @BeforeUpdate()

@@ -4,6 +4,7 @@ import { Step } from 'src/steps/entities/step.entity';
 import { Terminal } from 'src/terminal/entities/terminal.entity';
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinTable,
@@ -29,20 +30,20 @@ export class Service {
   @Column()
   price: number;
 
-  @ManyToMany(() => Step)
+  @OneToMany(() => Event, event => event.service)
+  events: Event[];
+
+  @ManyToMany(() => Step, step => step.services)
   @JoinTable({ name: 'services_steps' })
   steps: Step[];
 
-  @ManyToMany(() => Level)
+  @ManyToMany(() => Level, level => level.services)
   @JoinTable({ name: 'services_levels' })
   levels: Level[];
 
-  @ManyToMany(() => Terminal)
+  @ManyToMany(() => Terminal, terminal => terminal.services)
   @JoinTable({ name: 'services_terminals' })
   terminals: Terminal[];
-
-  @OneToMany(() => Event, event => event.service)
-  events: Event[];
 
   @Column()
   createdAt: Date;
@@ -50,5 +51,14 @@ export class Service {
   @BeforeInsert()
   addCreatedAt() {
     this.createdAt = new Date();
+  }
+
+  @Column()
+  updatedAt: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  addUpdatedAt() {
+    this.updatedAt = new Date();
   }
 }

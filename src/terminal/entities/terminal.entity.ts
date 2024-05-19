@@ -6,7 +6,6 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -33,29 +32,25 @@ export class Terminal {
   @Column({ type: 'enum', enum: TerminalStatus, default: TerminalStatus.idle })
   status: TerminalStatus;
 
-  @Column()
-  locationId: number;
-
   @ManyToOne(() => Location, location => location.terminals, { nullable: false })
   location: Location;
 
   @OneToMany(() => Event, event => event.terminal)
   events: Event[];
 
+  @ManyToMany(() => Service, service => service.terminals)
+  services: Service[];
+
   @Column()
   createdAt: Date;
-
-  @Column()
-  updatedAt: Date;
-
-  @ManyToMany(() => Service, service => service.terminals)
-  @JoinTable({ name: 'services_terminals' })
-  services: Service[];
 
   @BeforeInsert()
   addCreatedAt() {
     this.createdAt = new Date();
   }
+
+  @Column()
+  updatedAt: Date;
 
   @BeforeInsert()
   @BeforeUpdate()

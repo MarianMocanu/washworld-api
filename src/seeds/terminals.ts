@@ -23,35 +23,31 @@ async function seed() {
   if (connection.isInitialized) {
     console.log('Seeding terminals');
     const locationRepository = connection.getRepository<Location>('Location');
-    const terminalRepository = connection.getRepository<Terminal>('Terminal');
     const serviceRepository = connection.getRepository<Service>('Service');
+    const terminalRepository = connection.getRepository<Terminal>('Terminal');
 
     const locations: Location[] = await locationRepository.find();
+    const services: Service[] = await serviceRepository.find({ order: { id: 'ASC' } });
 
-    if (!locations.length) {
-      console.log('No locations found');
-    } else if (locations.length > 0) {
-      for (const location of locations) {
-        const numberOfTerminals = Math.floor(Math.random() * 5) + 1;
+    for (const location of locations) {
+      const terminalPromises = Array.from({ length: 5 }).map(async (_, index) => {
+        const newTerminal = terminalRepository.create({ status: TerminalStatus.idle });
+        newTerminal.location = location;
+        newTerminal.services = services;
 
-        const terminalPromises = Array.from({ length: numberOfTerminals }).map(async (_, index) => {
-          const numberOfServices = Math.floor(Math.random() * 6) + 1;
-          const services = await serviceRepository.find({
-            order: { id: 'ASC' },
-            take: numberOfServices,
-          });
-          const terminal = terminalRepository.create({
-            status: TerminalStatus.idle,
-            location: location,
-            services: services,
-          });
-          console.log('Terminal', index + 1, 'for location', location.id);
-          console.log(JSON.stringify(terminal, null, 2));
-          return terminalRepository.save(terminal);
-        });
+        const savedTerminal = await terminalRepository.save(newTerminal);
+        console.log(
+          'saved terminal',
+          savedTerminal.id,
+          'at location',
+          location.id,
+          'with services',
+          services.map(service => service.id).join(', '),
+        );
+        return savedTerminal;
+      });
 
-        await Promise.all(terminalPromises);
-      }
+      await Promise.all(terminalPromises);
     }
   }
   await connection.destroy();

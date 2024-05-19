@@ -37,13 +37,13 @@ export class Subscription {
   @Column()
   createdAt: Date;
 
-  @Column()
-  updatedAt: Date;
-
   @BeforeInsert()
   addCreatedAt() {
     this.createdAt = new Date();
   }
+
+  @Column()
+  updatedAt: Date;
 
   @BeforeUpdate()
   @BeforeInsert()

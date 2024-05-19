@@ -2,8 +2,9 @@ import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { TerminalStatus } from '../entities/terminal.entity';
 
 export class CreateTerminalDto {
-  constructor(partial: Partial<CreateTerminalDto>) {
-    Object.assign(this, partial);
+  constructor(status: TerminalStatus, locationId: number) {
+    this.status = status;
+    this.locationId = locationId;
   }
 
   @IsNotEmpty()

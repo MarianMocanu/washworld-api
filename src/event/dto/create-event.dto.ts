@@ -13,13 +13,9 @@ export class CreateEventDto {
   @IsNotEmpty()
   terminalId: number;
 
-  @IsOptional()
-  createdAt: Date;
-
-  @IsOptional()
-  updatedAt: Date;
-
-  constructor(partial: Partial<CreateEventDto>) {
-    Object.assign(this, partial);
+  constructor(carId: number, serviceId: number, terminalId: number) {
+    this.carId = carId;
+    this.serviceId = serviceId;
+    this.terminalId = terminalId;
   }
 }
