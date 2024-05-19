@@ -12,6 +12,7 @@ import { Level } from 'src/levels/entities/level.entity';
 import { Terminal } from 'src/terminal/entities/terminal.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Invoice } from 'src/invoices/entities/invoice.entity';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [
@@ -29,6 +30,6 @@ import { Invoice } from 'src/invoices/entities/invoice.entity';
     ]),
   ],
   controllers: [CarController],
-  providers: [CarService],
+  providers: [CarService, UserService],
 })
 export class CarModule {}

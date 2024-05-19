@@ -26,13 +26,13 @@ export class Invoice {
   @Column()
   createdAt: Date;
 
-  @Column()
-  updatedAt: Date;
-
   @BeforeInsert()
   addCreatedAt() {
     this.createdAt = new Date();
   }
+
+  @Column()
+  updatedAt: Date;
 
   @BeforeInsert()
   addUpdatedAt() {

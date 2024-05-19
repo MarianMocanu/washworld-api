@@ -1,5 +1,12 @@
 import { Terminal } from 'src/terminal/entities/terminal.entity';
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum LocationStatus {
   available = 'available',
@@ -57,15 +64,24 @@ export class Location {
     longitude: number;
   };
 
-  @Column()
-  createdAt: Date;
-
   @OneToMany(() => Terminal, terminal => terminal.location)
   terminals: Terminal[];
+
+  @Column()
+  createdAt: Date;
 
   @BeforeInsert()
   addCreatedAt(): void {
     this.createdAt = new Date();
+  }
+
+  @Column()
+  updatedAt: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  addUpdatedAt() {
+    this.updatedAt = new Date();
   }
 
   @BeforeInsert()

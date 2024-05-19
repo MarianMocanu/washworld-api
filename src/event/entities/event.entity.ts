@@ -29,7 +29,7 @@ export class Event {
   @OneToMany(() => Invoice, invoice => invoice.event)
   invoices: Invoice[];
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @BeforeInsert()
@@ -37,7 +37,7 @@ export class Event {
     this.createdAt = new Date();
   }
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
   @BeforeInsert()

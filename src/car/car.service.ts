@@ -1,16 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from './entities/car.entity';
+import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class CarService {
-  constructor(@InjectRepository(Car) private readonly carRepository: Repository<Car>) {}
+  constructor(
+    @InjectRepository(Car) private readonly carRepository: Repository<Car>,
+    private readonly userService: UserService,
+  ) {}
 
   async create(createCarDto: CreateCarDto): Promise<Car> {
-    const newCar = this.carRepository.create(createCarDto);
+    const foundUser: User = await this.userService.findOne(createCarDto.userId);
+    if (!foundUser) {
+      throw new BadRequestException('User not found');
+    }
+    const newCar = this.carRepository.create({ ...createCarDto, user: foundUser });
     return await this.carRepository.save(newCar);
   }
 
@@ -21,7 +30,7 @@ export class CarService {
   async findOne(id: number): Promise<Car> {
     const car = await this.carRepository.findOne({
       where: { id },
-      relations: ['user', 'subscription', 'events'],
+      relations: ['user', 'events'],
     });
 
     if (!car) {

@@ -1,9 +1,9 @@
 import { Service } from 'src/service/entities/service.entity';
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -25,15 +25,23 @@ export class Step {
   @Column()
   duration: number;
 
+  @ManyToMany(() => Service, service => service.steps)
+  services: Service[];
+
   @Column()
   createdAt: Date;
-
-  @ManyToMany(() => Service, service => service.steps)
-  @JoinTable({ name: 'services_steps' })
-  services: Service[];
 
   @BeforeInsert()
   addCreatedAt() {
     this.createdAt = new Date();
+  }
+
+  @Column()
+  updatedAt: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  addUpdatedAt() {
+    this.updatedAt = new Date();
   }
 }

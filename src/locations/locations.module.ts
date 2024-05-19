@@ -30,5 +30,6 @@ import { Terminal } from 'src/terminal/entities/terminal.entity';
   ],
   controllers: [LocationsController],
   providers: [LocationsService],
+  exports: [LocationsService],
 })
 export class LocationModule {}

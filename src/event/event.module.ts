@@ -12,6 +12,11 @@ import { Service } from 'src/service/entities/service.entity';
 import { Level } from 'src/levels/entities/level.entity';
 import { Terminal } from 'src/terminal/entities/terminal.entity';
 import { Location } from 'src/locations/entities/location.entity';
+import { ServiceService } from 'src/service/service.service';
+import { CarService } from 'src/car/car.service';
+import { TerminalService } from 'src/terminal/terminal.service';
+import { UserModule } from 'src/user/user.module';
+import { LocationModule } from 'src/locations/locations.module';
 
 @Module({
   imports: [
@@ -27,8 +32,10 @@ import { Location } from 'src/locations/entities/location.entity';
       Level,
       Terminal,
     ]),
+    UserModule,
+    LocationModule,
   ],
   controllers: [EventController],
-  providers: [EventService],
+  providers: [EventService, ServiceService, CarService, TerminalService],
 })
 export class EventModule {}

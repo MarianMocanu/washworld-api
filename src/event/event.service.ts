@@ -4,16 +4,33 @@ import { Event } from './entities/event.entity';
 import { Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { CarService } from 'src/car/car.service';
+import { ServiceService } from 'src/service/service.service';
+import { TerminalService } from 'src/terminal/terminal.service';
 
 @Injectable()
 export class EventService {
   constructor(
-    @InjectRepository(Event)
-    private readonly eventRepository: Repository<Event>,
+    @InjectRepository(Event) private readonly eventRepository: Repository<Event>,
+    private readonly carService: CarService,
+    private readonly serviceService: ServiceService,
+    private readonly terminalService: TerminalService,
   ) {}
 
   async create(createEventDto: CreateEventDto) {
-    const newEvent = this.eventRepository.create(createEventDto);
+    const newEvent = this.eventRepository.create();
+    const car = await this.carService.findOne(createEventDto.carId);
+    const service = await this.serviceService.findOne(createEventDto.serviceId);
+    const terminal = await this.terminalService.findOne(createEventDto.terminalId);
+
+    if (!car || !service || !terminal) {
+      throw new NotFoundException('Car/Service/Terminal not found');
+    }
+
+    newEvent.car = car;
+    newEvent.service = service;
+    newEvent.terminal = terminal;
+
     return await this.eventRepository.save(newEvent);
   }
 
