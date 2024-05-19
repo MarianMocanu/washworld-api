@@ -1,11 +1,12 @@
 import { DataSource } from 'typeorm';
 
 import * as dotenv from 'dotenv';
+import { CreateLocationDto } from 'src/locations/dto/create-location.dto';
+import { Location, LocationStatus } from 'src/locations/entities/location.entity';
 dotenv.config();
 
-const locationSeeds = [
+const locationSeeds: CreateLocationDto[] = [
   {
-    address: 'Rådhuspladsen 1, 1550 København',
     city: 'København',
     streetName: 'Rådhuspladsen',
     streetNumber: '1',
@@ -19,7 +20,7 @@ const locationSeeds = [
       saturday: { from: '00:00', to: '24:00' },
       sunday: { from: '08:00', to: '24:00' },
     },
-    status: 'available',
+    status: LocationStatus.available,
     image: 'https://example.com/image1.jpg',
     coordinates: {
       latitude: 55.6761,
@@ -27,7 +28,6 @@ const locationSeeds = [
     },
   },
   {
-    address: 'Vesterbrogade 3A, 1620 København',
     city: 'København',
     streetName: 'Vesterbrogade',
     streetNumber: '3A',
@@ -41,7 +41,7 @@ const locationSeeds = [
       saturday: { from: '00:00', to: '24:00' },
       sunday: { from: 'Closed', to: 'Closed' },
     },
-    status: 'maintenance',
+    status: LocationStatus.maintenance,
     image: 'https://example.com/image2.jpg',
     coordinates: {
       latitude: 55.6736,
@@ -49,7 +49,6 @@ const locationSeeds = [
     },
   },
   {
-    address: 'Strandgade 93, 1401 København',
     city: 'København',
     streetName: 'Strandgade',
     streetNumber: '93',
@@ -63,7 +62,7 @@ const locationSeeds = [
       saturday: { from: '00:00', to: '24:00' },
       sunday: { from: 'Closed', to: 'Closed' },
     },
-    status: 'closed',
+    status: LocationStatus.closed,
     image: 'https://example.com/image3.jpg',
     coordinates: {
       latitude: 55.6777,
@@ -86,17 +85,12 @@ async function seed() {
   const connection = await AppDataSource.initialize();
   if (connection.isInitialized) {
     console.log('Seeding locations');
-    const locationRepository = connection.getRepository('Location');
+    const locationRepository = connection.getRepository<Location>('Location');
 
-    for (const locationSeed of locationSeeds) {
-      const location = await locationRepository.findOneBy({ address: locationSeed.address });
-      if (!location) {
-        const newLocation = locationRepository.create(locationSeed);
-        const savedLocation = await locationRepository.save(newLocation);
-        console.log('Location seeded', savedLocation);
-      } else {
-        console.log('Location ALREADY seeded');
-      }
+    for (const [index, locationSeed] of locationSeeds.entries()) {
+      const newLocation = locationRepository.create(locationSeed);
+      const savedLocation = await locationRepository.save(newLocation);
+      console.log('Location', index + 1, JSON.stringify(savedLocation, null, 2));
     }
   }
   await connection.destroy();

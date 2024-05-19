@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Status } from '../entities/location.entity';
+import { LocationStatus } from '../entities/location.entity';
 
 interface Period {
   from: string;
@@ -43,7 +43,7 @@ export class UpdateLocationDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  status: Status;
+  status: LocationStatus;
 
   @IsOptional()
   @IsString()

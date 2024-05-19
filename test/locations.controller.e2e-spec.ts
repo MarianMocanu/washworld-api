@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { LocationsService } from 'src/locations/locations.service';
 import { CreateLocationDto } from 'src/locations/dto/create-location.dto';
-import { Status } from 'src/locations/entities/location.entity';
+import { LocationStatus } from 'src/locations/entities/location.entity';
 
 describe('Location Controller (e2e)', () => {
   let app: INestApplication;
@@ -46,7 +46,7 @@ describe('Location Controller (e2e)', () => {
           saturday: { from: '00:00', to: '24:00' },
           sunday: { from: 'Closed', to: 'Closed' },
         },
-        status: Status.closed,
+        status: LocationStatus.closed,
         image: 'https://example.com/image3.jpg',
         coordinates: {
           latitude: 55.6887,

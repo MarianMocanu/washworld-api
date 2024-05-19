@@ -1,4 +1,12 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Service } from 'src/service/entities/service.entity';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Step {
@@ -19,6 +27,10 @@ export class Step {
 
   @Column()
   createdAt: Date;
+
+  @ManyToMany(() => Service, service => service.steps)
+  @JoinTable({ name: 'services_steps' })
+  services: Service[];
 
   @BeforeInsert()
   addCreatedAt() {

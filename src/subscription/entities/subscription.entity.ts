@@ -1,3 +1,4 @@
+import { Car } from 'src/car/entities/car.entity';
 import { Invoice } from 'src/invoices/entities/invoice.entity';
 import { Level } from 'src/levels/entities/level.entity';
 import {
@@ -5,8 +6,9 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  ManyToOne,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -21,7 +23,12 @@ export class Subscription {
   @Column()
   expiresAt: Date;
 
-  @ManyToOne(() => Level, level => level.subscriptions, { nullable: false })
+  @OneToOne(() => Car, { nullable: false })
+  @JoinColumn({ name: 'carId' })
+  car: Car;
+
+  @OneToOne(() => Level, { nullable: false })
+  @JoinColumn({ name: 'levelId' })
   level: Level;
 
   @OneToMany(() => Invoice, invoice => invoice.subscription)

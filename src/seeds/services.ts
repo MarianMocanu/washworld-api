@@ -1,29 +1,40 @@
 import { DataSource } from 'typeorm';
 
 import * as dotenv from 'dotenv';
+import { Service, ServiceType } from 'src/service/entities/service.entity';
+import { CreateServiceDto } from 'src/service/dto/create-service.dto';
+
 dotenv.config();
 
-const serviceSeeds = [
+const serviceSeeds: CreateServiceDto[] = [
   // price for auto service is the subscription cost, manual and vacuum are per minute of usage
   {
-    type: 'auto',
-    price: '99',
+    type: ServiceType.auto,
+    price: 69, // Basic
   },
   {
-    type: 'auto',
-    price: '139',
+    type: ServiceType.auto,
+    price: 99, // Gold
   },
   {
-    type: 'auto',
-    price: '169',
+    type: ServiceType.auto,
+    price: 169, // Premium
   },
   {
-    type: 'manual',
-    price: '10',
+    type: ServiceType.auto,
+    price: 199, // Premium Plus
   },
   {
-    type: 'vacuum',
-    price: '5',
+    type: ServiceType.auto,
+    price: 239, // All Inclusive
+  },
+  {
+    type: ServiceType.self,
+    price: 10,
+  },
+  {
+    type: ServiceType.vacuum,
+    price: 10,
   },
 ];
 
@@ -41,17 +52,12 @@ async function seed() {
   const connection = await AppDataSource.initialize();
   if (connection.isInitialized) {
     console.log('Seeding services');
-    const serviceRepository = connection.getRepository('service');
+    const serviceRepository = connection.getRepository<Service>('service');
 
-    for (const serviceName of serviceSeeds) {
-      const service = await serviceRepository.findOne({ where: { name: serviceName } });
-      if (!service) {
-        const newservice = serviceRepository.create({ name: serviceName });
-        const savedservice = await serviceRepository.save(newservice);
-        console.log('service seeded', savedservice);
-      } else {
-        console.log('service ALREADY seeded');
-      }
+    for (const [index, serviceSeed] of serviceSeeds.entries()) {
+      const newService = serviceRepository.create(serviceSeed);
+      const savedService = await serviceRepository.save(newService);
+      console.log('Service', index + 1, JSON.stringify(savedService, null, 2));
     }
   }
   await connection.destroy();

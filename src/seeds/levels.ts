@@ -1,9 +1,19 @@
 import { DataSource } from 'typeorm';
 
 import * as dotenv from 'dotenv';
+import { CreateLevelDto } from 'src/levels/dto/create-level.dto';
+import { Level } from 'src/levels/entities/level.entity';
+import { Service, ServiceType } from 'src/service/entities/service.entity';
+
 dotenv.config();
 
-const levelSeeds = ['Basic', 'Gold', 'Premium', 'Premium Plus', 'All Inclusive'];
+const levelSeeds: CreateLevelDto[] = [
+  { name: 'Basic' },
+  { name: 'Gold' },
+  { name: 'Premium' },
+  { name: 'Premium Plus' },
+  { name: 'All Inclusive' },
+];
 
 async function seed() {
   const AppDataSource = new DataSource({
@@ -19,17 +29,35 @@ async function seed() {
   const connection = await AppDataSource.initialize();
   if (connection.isInitialized) {
     console.log('Seeding levels');
-    const levelRepository = connection.getRepository('Level');
 
-    for (const levelName of levelSeeds) {
-      const level = await levelRepository.findOne({ where: { name: levelName } });
+    const levelRepository = connection.getRepository<Level>('Level');
+    const serviceRepository = connection.getRepository<Service>('Service');
+
+    for (const [index, levelSeed] of levelSeeds.entries()) {
+      const level = await levelRepository.findOne({ where: { name: levelSeed.name } });
       if (!level) {
-        const newLevel = levelRepository.create({ name: levelName });
+        const newLevel = levelRepository.create(levelSeed);
         const savedLevel = await levelRepository.save(newLevel);
-        console.log('Level seeded', savedLevel);
-      } else {
-        console.log('Level ALREADY seeded');
+        console.log('Level', index + 1, JSON.stringify(savedLevel, null, 2));
       }
+    }
+
+    const automatedServices: Service[] = await serviceRepository.find({
+      where: { type: ServiceType.auto },
+      order: { price: 'ASC' },
+    });
+
+    for (const [index, service] of automatedServices.entries()) {
+      service.levels = await levelRepository.find({
+        order: { id: 'ASC' },
+        take: index + 1,
+      });
+      const serviceWithLevels = await serviceRepository.save(service);
+      console.log(
+        'Updated levels for service',
+        index + 1,
+        JSON.stringify(serviceWithLevels, null, 2),
+      );
     }
   }
   await connection.destroy();
