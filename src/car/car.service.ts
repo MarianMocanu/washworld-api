@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
+import { DeleteResult, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Car } from './entities/car.entity';
 
 @Injectable()
 export class CarService {
-  create(createCarDto: CreateCarDto) {
-    return 'This action adds a new car';
+  constructor(@InjectRepository(Car) private readonly carRepository: Repository<Car>) {}
+
+  async create(createCarDto: CreateCarDto): Promise<Car> {
+    const newCar = this.carRepository.create(createCarDto);
+    return await this.carRepository.save(newCar);
   }
 
-  findAll() {
-    return `This action returns all car`;
+  findAll(): Promise<Car[]> {
+    return this.carRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} car`;
+  async findOne(id: number): Promise<Car> {
+    const car = await this.carRepository.findOne({
+      where: { id },
+      relations: ['user', 'subscription', 'events'],
+    });
+
+    if (!car) {
+      throw new NotFoundException('Car not found');
+    }
+
+    return car;
   }
 
-  update(id: number, updateCarDto: UpdateCarDto) {
-    return `This action updates a #${id} car`;
+  findAllByUserId(userId: number): Promise<Car[]> {
+    return this.carRepository.find({
+      where: { user: { id: userId } },
+      relations: ['user', 'subscription', 'events'],
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} car`;
+  async update(id: number, updateCarDto: UpdateCarDto): Promise<Car> {
+    const car = await this.findOne(id);
+
+    const updatedCar = this.carRepository.create({
+      ...car,
+      ...updateCarDto,
+    });
+
+    return await this.carRepository.save(updatedCar);
+  }
+
+  async remove(id: number): Promise<DeleteResult> {
+    const foundCar = await this.carRepository.findOneBy({ id });
+    if (!foundCar) {
+      throw new NotFoundException('Car not found');
+    }
+    return this.carRepository.delete(id);
   }
 }

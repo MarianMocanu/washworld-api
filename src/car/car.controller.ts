@@ -1,9 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 
-@Controller('car')
+@Controller('cars')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
@@ -19,16 +28,30 @@ export class CarController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    this.validateSubscriptionId(id);
     return this.carService.findOne(+id);
+  }
+
+  @Get('user/:userId')
+  findAllByUserId(@Param('userId') userId: string) {
+    return this.carService.findAllByUserId(+userId);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
+    this.validateSubscriptionId(id);
     return this.carService.update(+id, updateCarDto);
+  }
+
+  validateSubscriptionId(id: string) {
+    if (isNaN(+id)) {
+      throw new BadRequestException('Subscription id is not a number');
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
+    this.validateSubscriptionId(id);
     return this.carService.remove(+id);
   }
 }
