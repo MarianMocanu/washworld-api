@@ -6,10 +6,8 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -23,10 +21,6 @@ export class Car {
 
   @ManyToOne(() => User, user => user.cars, { nullable: false })
   user: User;
-
-  @OneToOne(() => Subscription, { nullable: true })
-  @JoinColumn()
-  subscription: Subscription;
 
   @OneToMany(() => Event, event => event.car)
   events: Event[];

@@ -1,6 +1,6 @@
 import { IsDefined, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BeforeInsert } from 'typeorm';
-import { Status } from '../entities/location.entity';
+import { LocationStatus } from '../entities/location.entity';
 
 interface Period {
   from: string;
@@ -18,9 +18,26 @@ interface OpeningHours {
 }
 
 export class CreateLocationDto {
-  constructor(partial: Partial<CreateLocationDto>) {
-    Object.assign(this, partial);
+  constructor(
+    city: string,
+    streetName: string,
+    streetNumber: string,
+    postalCode: string,
+    openingHours: OpeningHours,
+    status: LocationStatus,
+    image: string,
+    coordinates: { latitude: number; longitude: number },
+  ) {
+    this.city = city;
+    this.streetName = streetName;
+    this.streetNumber = streetNumber;
+    this.postalCode = postalCode;
+    this.openingHours = openingHours;
+    this.status = status;
+    this.image = image;
+    this.coordinates = coordinates;
   }
+
   @IsDefined()
   @IsString()
   @IsNotEmpty()
@@ -47,7 +64,7 @@ export class CreateLocationDto {
   @IsDefined()
   @IsString()
   @IsNotEmpty()
-  status: Status;
+  status: LocationStatus;
 
   @IsOptional()
   @IsString()
@@ -58,11 +75,4 @@ export class CreateLocationDto {
     latitude: number;
     longitude: number;
   };
-
-  @BeforeInsert()
-  addCreatedAt() {
-    this.createdAt = new Date();
-  }
-
-  createdAt: Date;
 }

@@ -1,7 +1,7 @@
 import { Terminal } from 'src/terminal/entities/terminal.entity';
 import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-export enum Status {
+export enum LocationStatus {
   available = 'available',
   maintenance = 'maintenance',
   closed = 'closed',
@@ -45,8 +45,8 @@ export class Location {
   @Column({ type: 'json' })
   openingHours: OpeningHours;
 
-  @Column({ type: 'enum', enum: Status, default: Status.available })
-  status: Status;
+  @Column({ type: 'enum', enum: LocationStatus, default: LocationStatus.available })
+  status: LocationStatus;
 
   @Column()
   image: string;
