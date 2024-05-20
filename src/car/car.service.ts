@@ -43,7 +43,7 @@ export class CarService {
   findAllByUserId(userId: number): Promise<Car[]> {
     return this.carRepository.find({
       where: { user: { id: userId } },
-      relations: ['user', 'subscription', 'events'],
+      relations: ['user', 'events'],
     });
   }
 

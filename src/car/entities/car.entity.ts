@@ -1,5 +1,4 @@
 import { Event } from 'src/event/entities/event.entity';
-import { Subscription } from 'src/subscription/entities/subscription.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   BeforeInsert,
@@ -16,8 +15,11 @@ export class Car {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   plateNumber: string;
+
+  @Column()
+  name: string;
 
   @ManyToOne(() => User, user => user.cars, { nullable: false })
   user: User;

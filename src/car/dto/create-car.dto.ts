@@ -1,9 +1,13 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateCarDto {
   @IsNotEmpty()
   @IsString()
   plateNumber: string;
+
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
   @IsNumber()
   @IsNotEmpty()
