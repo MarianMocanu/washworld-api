@@ -91,7 +91,7 @@ export class DatabaseService implements OnModuleInit {
     this.logger.log('Trigger create_invoice_after_event_insert dropped successfully.');
 
     const createSQL = `
-    create or replace trigger create_invoice_after_event_insert
+    create trigger create_invoice_after_event_insert
     after insert
     on event
     for each row
