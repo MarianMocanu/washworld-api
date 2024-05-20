@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -12,7 +12,7 @@ export class AuthService {
   async signup(signupDTO: CreateUserDto): Promise<User> {
     const createdUser = this.userService.create(signupDTO);
     if (!createdUser) {
-      throw new UnauthorizedException('Error creating user');
+      throw new BadRequestException('Error creating user');
     }
     return createdUser;
   }
