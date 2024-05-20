@@ -10,7 +10,11 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async signup(signupDTO: CreateUserDto): Promise<User> {
-    return this.userService.create(signupDTO);
+    const createdUser = this.userService.create(signupDTO);
+    if (!createdUser) {
+      throw new UnauthorizedException('Error creating user');
+    }
+    return createdUser;
   }
 
   async login({ email, password }: LoginDto): Promise<{ user: User; token: string }> {
