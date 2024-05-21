@@ -7,12 +7,13 @@ import { Service, ServiceType } from 'src/service/entities/service.entity';
 
 dotenv.config();
 
+// prices in kr per month
 const levelSeeds: CreateLevelDto[] = [
-  { name: 'Basic' },
-  { name: 'Gold' },
-  { name: 'Premium' },
-  { name: 'Premium Plus' },
-  { name: 'All Inclusive' },
+  { name: 'Basic', price: 99 },
+  { name: 'Gold', price: 139 },
+  { name: 'Premium', price: 169 },
+  { name: 'Premium Plus', price: 179 },
+  { name: 'All Inclusive', price: 229 },
 ];
 
 async function seed() {
