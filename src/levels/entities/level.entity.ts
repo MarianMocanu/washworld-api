@@ -18,6 +18,9 @@ export class Level {
   @Column()
   name: string;
 
+  @Column()
+  price: number;
+
   @OneToMany(() => Subscription, subscription => subscription.level)
   subscriptions: Subscription[];
 

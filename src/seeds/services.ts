@@ -7,26 +7,26 @@ import { CreateServiceDto } from 'src/service/dto/create-service.dto';
 dotenv.config();
 
 const serviceSeeds: CreateServiceDto[] = [
-  // price for auto service is the subscription cost, manual and vacuum are per minute of usage
+  // price for auto service is the cost per wash, manual and vacuum are per minute of usage
   {
     type: ServiceType.auto,
-    price: 69, // Basic
+    price: 40, // Basic
   },
   {
     type: ServiceType.auto,
-    price: 99, // Gold
+    price: 79, // Gold
   },
   {
     type: ServiceType.auto,
-    price: 169, // Premium
+    price: 99, // Premium
   },
   {
     type: ServiceType.auto,
-    price: 199, // Premium Plus
+    price: 109, // Premium Plus
   },
   {
     type: ServiceType.auto,
-    price: 239, // All Inclusive
+    price: 139, // All Inclusive
   },
   {
     type: ServiceType.self,
