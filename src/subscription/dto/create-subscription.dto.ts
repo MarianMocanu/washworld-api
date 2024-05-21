@@ -10,4 +10,8 @@ export class CreateSubscriptionDto {
   @IsNotEmpty()
   @IsNumber()
   levelId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  carId: number;
 }

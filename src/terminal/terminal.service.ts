@@ -43,10 +43,17 @@ export class TerminalService {
   }
 
   findAllByLocationId(locationId: number): Promise<Terminal[]> {
-    return this.terminalRepository.find({
-      where: { location: { id: locationId } },
-      relations: ['location'],
-    });
+    return this.terminalRepository
+      .createQueryBuilder('terminal')
+      .leftJoinAndSelect('terminal.services', 'service')
+      .leftJoinAndSelect('service.steps', 'step')
+      .leftJoinAndSelect(
+        'service.levels',
+        'level',
+        'level.id = (SELECT MAX(id) FROM level INNER JOIN services_levels ON level.id = services_levels."levelId" WHERE services_levels."serviceId" = service.id)',
+      )
+      .where('terminal.locationId = :locationId', { locationId })
+      .getMany();
   }
 
   async update(id: number, updateTerminalDto: UpdateTerminalDto) {
