@@ -35,7 +35,7 @@ export class TerminalController {
   @Get('/location/:id')
   findAllByLocationId(@Param('id') id: string) {
     this.validateTerminalId(id);
-    return this.terminalService.findOne(+id);
+    return this.terminalService.findAllByLocationId(+id);
   }
 
   // @Patch(':id')

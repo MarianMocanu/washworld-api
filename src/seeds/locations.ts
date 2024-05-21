@@ -154,7 +154,7 @@ const locationSeeds: CreateLocationDto[] = [
     },
     status: LocationStatus.available,
     image:
-      'https://washworld.dk/_next/image?url=https%3A%2F%2Fwashworld-wordpress-production.storage.googleapis.com%2Fwp-content%2Fuploads%2F2021%2F11%2F28140211%2F2-1.png&w=3840&q=50',
+      'https://washworld.dk/_next/image?url=https%3A%2F%2Fwashworld-wordpress-production.storage.googleapis.com%2Fwp-content%2Fuploads%2F2021%2F11%2F28140216%2F5.png&w=3840&q=50',
     coordinates: {
       latitude: 55.6568,
       longitude: 12.2927,
