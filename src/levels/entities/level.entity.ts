@@ -24,7 +24,7 @@ export class Level {
   @OneToMany(() => Subscription, subscription => subscription.level)
   subscriptions: Subscription[];
 
-  @ManyToMany(() => Service, service => service.steps)
+  @ManyToMany(() => Service, service => service.levels)
   services: Service[];
 
   @Column()

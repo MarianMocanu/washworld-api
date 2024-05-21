@@ -12,6 +12,9 @@ import { Level } from 'src/levels/entities/level.entity';
 import { Terminal } from 'src/terminal/entities/terminal.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Invoice } from 'src/invoices/entities/invoice.entity';
+import { LevelsService } from 'src/levels/levels.service';
+import { CarService } from 'src/car/car.service';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [
@@ -29,6 +32,6 @@ import { Invoice } from 'src/invoices/entities/invoice.entity';
     ]),
   ],
   controllers: [SubscriptionController],
-  providers: [SubscriptionService],
+  providers: [SubscriptionService, LevelsService, CarService, UserService],
 })
 export class SubscriptionModule {}

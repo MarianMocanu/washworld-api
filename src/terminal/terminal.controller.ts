@@ -28,14 +28,20 @@ export class TerminalController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    this.validateTerminalId(id);
+    this.validateId(id);
     return this.terminalService.findOne(+id);
   }
 
   @Get('/location/:id')
   findAllByLocationId(@Param('id') id: string) {
-    this.validateTerminalId(id);
+    this.validateId(id);
     return this.terminalService.findAllByLocationId(+id);
+  }
+
+  @Get('/available/service/:serviceId')
+  findTerminalByServiceId(@Param('serviceId') id: string) {
+    this.validateId(id);
+    return this.terminalService.findAllByServiceId(+id);
   }
 
   // @Patch(':id')
@@ -43,16 +49,15 @@ export class TerminalController {
   //   this.validateTerminalId(id);
   //   return this.terminalService.update(+id, updateTerminalDto);
   // }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
-    this.validateTerminalId(id);
+    this.validateId(id);
     return this.terminalService.remove(+id);
   }
 
-  validateTerminalId(id: string) {
+  validateId(id: string) {
     if (isNaN(+id)) {
-      throw new BadRequestException('Terminal ID is not a number');
+      throw new BadRequestException('Id is not a number');
     }
   }
 }

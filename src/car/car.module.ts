@@ -31,5 +31,6 @@ import { UserService } from 'src/user/user.service';
   ],
   controllers: [CarController],
   providers: [CarService, UserService],
+  exports: [CarService],
 })
 export class CarModule {}

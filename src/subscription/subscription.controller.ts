@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  BadRequestException,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
@@ -19,19 +28,24 @@ export class SubscriptionController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    this.validateSubscriptionId(id);
+    this.validateId(id);
     return this.subscriptionService.findOne(+id);
+  }
+
+  @Get('/user/:userId')
+  findSubscriptionByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    return this.subscriptionService.findOneByUserId(userId);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSubscriptionDto: UpdateSubscriptionDto) {
-    this.validateSubscriptionId(id);
+    this.validateId(id);
     return this.subscriptionService.update(+id, updateSubscriptionDto);
   }
 
-  validateSubscriptionId(id: string) {
+  validateId(id: string) {
     if (isNaN(+id)) {
-      throw new BadRequestException('Subscription id is not a number');
+      throw new BadRequestException('Id is not a number');
     }
   }
 

@@ -5,27 +5,32 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Subscription } from './entities/subscription.entity';
 import { Level } from 'src/levels/entities/level.entity';
 import { Repository } from 'typeorm';
+import { CarService } from 'src/car/car.service';
+import { LevelsService } from 'src/levels/levels.service';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
     @InjectRepository(Subscription)
     private readonly subscriptionRepository: Repository<Subscription>,
-    @InjectRepository(Level)
-    private readonly levelRepository: Repository<Level>,
+    private readonly levelService: LevelsService,
+    private readonly carService: CarService,
   ) {}
 
   async create(createSubscriptionDto: CreateSubscriptionDto) {
-    const level = await this.levelRepository.findOne({
-      where: { id: createSubscriptionDto.levelId },
-    });
+    const level = await this.levelService.findOne(createSubscriptionDto.levelId);
     if (!level) {
       throw new NotFoundException('Level not found');
     }
-    const newSubscription = this.subscriptionRepository.create({
-      ...createSubscriptionDto,
-      level,
-    });
+
+    const car = await this.carService.findOne(createSubscriptionDto.carId);
+    if (!car) {
+      throw new NotFoundException('Car not found');
+    }
+
+    const newSubscription = this.subscriptionRepository.create(createSubscriptionDto);
+    newSubscription.level = level;
+    newSubscription.car = car;
     return await this.subscriptionRepository.save(newSubscription);
   }
 
@@ -44,25 +49,47 @@ export class SubscriptionService {
     return foundSubscription;
   }
 
+  async findOneByUserId(userId: number) {
+    const foundSubscription = await this.subscriptionRepository.findOne({
+      where: { car: { user: { id: userId } } },
+      relations: ['level', 'level.services', 'car', 'car.user'],
+    });
+    return foundSubscription;
+  }
+
   async update(id: number, updateSubscriptionDto: UpdateSubscriptionDto) {
     const foundSubscription = await this.subscriptionRepository.findOne({
       where: { id },
-      relations: ['level'],
+      relations: ['level', 'car'],
     });
     if (!foundSubscription) {
       throw new NotFoundException('Subscription not found');
     }
-    const level = await this.levelRepository.findOne({
-      where: { id: updateSubscriptionDto.levelId },
-    });
-    if (!level) {
-      throw new NotFoundException('Level not found');
+
+    if (updateSubscriptionDto.levelId) {
+      const level = await this.levelService.findOne(updateSubscriptionDto.levelId);
+      if (!level) {
+        throw new NotFoundException('Level not found');
+      }
+      foundSubscription.level = level;
     }
-    const updatedSubscription = this.subscriptionRepository.merge(foundSubscription, {
-      ...updateSubscriptionDto,
-      level,
-    });
-    return this.subscriptionRepository.save(updatedSubscription);
+
+    if (updateSubscriptionDto.carId) {
+      const car = await this.carService.findOne(updateSubscriptionDto.carId);
+      if (!car) {
+        throw new NotFoundException('Car not found');
+      }
+      foundSubscription.car = car;
+    }
+
+    if (updateSubscriptionDto.active !== undefined) {
+      foundSubscription.active = updateSubscriptionDto.active;
+    }
+
+    if (updateSubscriptionDto.expiresAt) {
+      foundSubscription.expiresAt = updateSubscriptionDto.expiresAt;
+    }
+    return this.subscriptionRepository.save(foundSubscription);
   }
 
   // remove(id: number) {
