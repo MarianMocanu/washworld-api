@@ -19,9 +19,9 @@ export class EventService {
 
   async create(createEventDto: CreateEventDto) {
     const newEvent = this.eventRepository.create();
-    const car = await this.carService.findOne(createEventDto.carId);
-    const service = await this.serviceService.findOne(createEventDto.serviceId);
-    const terminal = await this.terminalService.findOne(createEventDto.terminalId);
+    const car = await this.carService.findOne(createEventDto.carId, true);
+    const service = await this.serviceService.findOne(createEventDto.serviceId, true);
+    const terminal = await this.terminalService.findOne(createEventDto.terminalId, true);
 
     if (!car || !service || !terminal) {
       throw new NotFoundException('Car/Service/Terminal not found');

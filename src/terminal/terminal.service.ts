@@ -3,7 +3,7 @@ import { CreateTerminalDto } from './dto/create-terminal.dto';
 // import { UpdateTerminalDto } from './dto/update-terminal.dto';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Terminal } from './entities/terminal.entity';
+import { Terminal, TerminalStatus } from './entities/terminal.entity';
 import { UpdateTerminalDto } from './dto/update-terminal.dto';
 import { LocationsService } from 'src/locations/locations.service';
 @Injectable()
@@ -28,18 +28,23 @@ export class TerminalService {
     });
   }
 
-  findOne(id: number): Promise<Terminal> {
+  findOne(id: number, withoutRelations?: boolean): Promise<Terminal> {
     return this.terminalRepository.findOne({
       where: { id },
-      relations: ['services'],
+      relations: withoutRelations ? [] : ['services'],
     });
   }
 
-  findAllByServiceId(serviceId: number): Promise<Terminal[]> {
-    return this.terminalRepository.find({
-      where: { services: { id: serviceId } },
-      relations: ['services'],
+  findAvailableAtLocationByServiceId(locationId: number, serviceId: number): Promise<Terminal> {
+    const foundTerminal = this.terminalRepository.findOne({
+      where: {
+        services: { id: serviceId },
+        location: { id: locationId },
+        status: TerminalStatus.idle,
+      },
+      relations: ['services', 'location'],
     });
+    return foundTerminal;
   }
 
   findAllByLocationId(locationId: number): Promise<Terminal[]> {

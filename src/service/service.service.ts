@@ -20,11 +20,26 @@ export class ServiceService {
     });
   }
 
-  findOne(id: number) {
-    return this.serviceRepository.findOne({
-      where: { id },
-      relations: ['terminals', 'steps', 'levels'],
-    });
+  // findOne(id: number, withoutRelations?: boolean) {
+  //   return this.serviceRepository.findOne({
+  //     where: { id },
+  //     relations: withoutRelations ? [] : ['terminals', 'steps', 'levels'],
+  //   });
+  // }
+
+  findOne(id: number, withoutRelations?: boolean) {
+    if (withoutRelations) {
+      return this.serviceRepository.findOne({ where: { id } });
+    } else {
+      return this.serviceRepository
+        .createQueryBuilder('service')
+        .leftJoinAndSelect('service.terminals', 'terminal')
+        .leftJoinAndSelect('service.levels', 'level')
+        .leftJoinAndSelect('service.steps', 'step')
+        .where('service.id = :id', { id })
+        .orderBy('step.id', 'ASC')
+        .getOne();
+    }
   }
 
   async update(id: number, updateServiceDto: UpdateServiceDto) {
