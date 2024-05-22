@@ -7,8 +7,8 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -23,11 +23,11 @@ export class Subscription {
   @Column()
   expiresAt: Date;
 
-  @OneToOne(() => Car, { nullable: false })
+  @ManyToOne(() => Car, { nullable: false })
   @JoinColumn({ name: 'carId' })
   car: Car;
 
-  @OneToOne(() => Level, { nullable: false })
+  @ManyToOne(() => Level, { nullable: false })
   @JoinColumn({ name: 'levelId' })
   level: Level;
 
@@ -37,13 +37,24 @@ export class Subscription {
   @Column()
   createdAt: Date;
 
+  @Column()
+  updatedAt: Date;
+
   @BeforeInsert()
   addCreatedAt() {
     this.createdAt = new Date();
   }
 
-  @Column()
-  updatedAt: Date;
+  @BeforeInsert()
+  setExpiresAt() {
+    const now = new Date();
+    this.expiresAt = new Date(now.setMonth(now.getMonth() + 1));
+  }
+
+  @BeforeInsert()
+  setActive() {
+    this.active = true;
+  }
 
   @BeforeUpdate()
   @BeforeInsert()
