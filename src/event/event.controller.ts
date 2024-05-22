@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   BadRequestException,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -18,7 +20,7 @@ export class EventController {
 
   @Post()
   create(@Body() createEventDto: CreateEventDto) {
-    this.eventService.create(createEventDto);
+    return this.eventService.create(createEventDto);
   }
 
   @Get()
@@ -30,6 +32,14 @@ export class EventController {
   findOne(@Param('id') id: string) {
     this.validateEventId(id);
     return this.eventService.findOne(+id);
+  }
+
+  @Get('user/:userId')
+  findAllByUserId(
+    @Param('userId') userId: string,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit: number,
+  ) {
+    return this.eventService.findAllByUserId(+userId, limit);
   }
 
   @Patch(':id')
