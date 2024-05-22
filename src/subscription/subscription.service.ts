@@ -3,7 +3,6 @@ import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subscription } from './entities/subscription.entity';
-import { Level } from 'src/levels/entities/level.entity';
 import { Repository } from 'typeorm';
 import { CarService } from 'src/car/car.service';
 import { LevelsService } from 'src/levels/levels.service';
@@ -49,12 +48,12 @@ export class SubscriptionService {
     return foundSubscription;
   }
 
-  async findOneByUserId(userId: number) {
-    const foundSubscription = await this.subscriptionRepository.findOne({
+  async findAllByUserId(userId: number) {
+    const foundSubscriptions = await this.subscriptionRepository.find({
       where: { car: { user: { id: userId } } },
       relations: ['level', 'level.services', 'car', 'car.user'],
     });
-    return foundSubscription;
+    return foundSubscriptions;
   }
 
   async update(id: number, updateSubscriptionDto: UpdateSubscriptionDto) {
