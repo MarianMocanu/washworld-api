@@ -27,9 +27,11 @@ export class SubscriptionService {
       throw new NotFoundException('Car not found');
     }
 
-    const newSubscription = this.subscriptionRepository.create(createSubscriptionDto);
-    newSubscription.level = level;
-    newSubscription.car = car;
+    const newSubscription = this.subscriptionRepository.create({
+      ...createSubscriptionDto,
+      level,
+      car,
+    });
     return await this.subscriptionRepository.save(newSubscription);
   }
 
