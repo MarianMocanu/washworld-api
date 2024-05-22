@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   BadRequestException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
@@ -27,26 +28,17 @@ export class ServiceController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    this.validateServiceId(id);
-    return this.serviceService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.serviceService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateServiceDto: UpdateServiceDto) {
-    this.validateServiceId(id);
-    return this.serviceService.update(+id, updateServiceDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateServiceDto: UpdateServiceDto) {
+    return this.serviceService.update(id, updateServiceDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.validateServiceId(id);
-    return this.serviceService.remove(+id);
-  }
-
-  validateServiceId(id: string) {
-    if (isNaN(+id)) {
-      throw new BadRequestException('Service ID is not a number');
-    }
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.serviceService.remove(id);
   }
 }

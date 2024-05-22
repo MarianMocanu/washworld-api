@@ -28,18 +28,23 @@ export class TerminalService {
     });
   }
 
-  findOne(id: number): Promise<Terminal> {
+  findOne(id: number, withoutRelations?: boolean): Promise<Terminal> {
     return this.terminalRepository.findOne({
       where: { id },
-      relations: ['services'],
+      relations: withoutRelations ? [] : ['services'],
     });
   }
 
-  findAvailableByServiceId(serviceId: number): Promise<Terminal> {
-    return this.terminalRepository.findOne({
-      where: { services: { id: serviceId }, status: TerminalStatus.idle },
-      relations: ['services'],
+  findAvailableAtLocationByServiceId(locationId: number, serviceId: number): Promise<Terminal> {
+    const foundTerminal = this.terminalRepository.findOne({
+      where: {
+        services: { id: serviceId },
+        location: { id: locationId },
+        status: TerminalStatus.idle,
+      },
+      relations: ['services', 'location'],
     });
+    return foundTerminal;
   }
 
   findAllByLocationId(locationId: number): Promise<Terminal[]> {

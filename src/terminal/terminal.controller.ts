@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { TerminalService } from './terminal.service';
 import { CreateTerminalDto } from './dto/create-terminal.dto';
@@ -21,6 +22,16 @@ export class TerminalController {
     return this.terminalService.create(createTerminalDto);
   }
 
+  @Get('available')
+  findTerminalByServiceId(
+    @Query('serviceId', ParseIntPipe) serviceId: number,
+    @Query('locationId', ParseIntPipe) locationId: number,
+  ) {
+    if (serviceId && locationId) {
+      return this.terminalService.findAvailableAtLocationByServiceId(locationId, serviceId);
+    }
+  }
+
   @Get()
   findAll() {
     return this.terminalService.findAll();
@@ -31,14 +42,9 @@ export class TerminalController {
     return this.terminalService.findOne(id);
   }
 
-  @Get('/location/:locationId')
-  findAllByLocationId(@Param('id', ParseIntPipe) locationId: number) {
+  @Get('location/:locationId')
+  findAllByLocationId(@Param('locationId', ParseIntPipe) locationId: number) {
     return this.terminalService.findAllByLocationId(locationId);
-  }
-
-  @Get('/available/service/:serviceId')
-  findTerminalByServiceId(@Param('serviceId', ParseIntPipe) serviceId: number) {
-    return this.terminalService.findAvailableByServiceId(serviceId);
   }
 
   // @Patch(':id')

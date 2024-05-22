@@ -27,10 +27,10 @@ export class CarService {
     return this.carRepository.find();
   }
 
-  async findOne(id: number): Promise<Car> {
+  async findOne(id: number, withoutRelations?: boolean): Promise<Car> {
     const car = await this.carRepository.findOne({
       where: { id },
-      relations: ['user', 'events'],
+      relations: withoutRelations ? [] : ['user', 'events'],
     });
 
     if (!car) {
@@ -40,8 +40,8 @@ export class CarService {
     return car;
   }
 
-  findAllByUserId(userId: number): Promise<Car[]> {
-    return this.carRepository.find({
+  async findAllByUserId(userId: number): Promise<Car[]> {
+    return await this.carRepository.find({
       where: { user: { id: userId } },
       relations: ['user', 'events'],
     });
