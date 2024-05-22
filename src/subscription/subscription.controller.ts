@@ -33,8 +33,8 @@ export class SubscriptionController {
   }
 
   @Get('/user/:userId')
-  findSubscriptionByUserId(@Param('userId', ParseIntPipe) userId: number) {
-    return this.subscriptionService.findOneByUserId(userId);
+  findSubscriptionsByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    return this.subscriptionService.findAllByUserId(userId);
   }
 
   @Patch(':id')

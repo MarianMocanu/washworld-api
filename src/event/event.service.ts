@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { CarService } from 'src/car/car.service';
@@ -31,11 +31,23 @@ export class EventService {
     newEvent.service = service;
     newEvent.terminal = terminal;
 
-    return await this.eventRepository.save(newEvent);
+    return this.eventRepository.save(newEvent);
   }
 
   findAll() {
     return this.eventRepository.find();
+  }
+
+  findAllByUserId(userId: number, limit: number) {
+    const options: FindManyOptions<Event> = {
+      where: { car: { user: { id: userId } } },
+      relations: ['car', 'service', 'terminal', 'terminal.location'],
+      order: { id: 'DESC' },
+    };
+    if (limit) {
+      options.take = limit;
+    }
+    return this.eventRepository.find(options);
   }
 
   async findOne(id: number) {
