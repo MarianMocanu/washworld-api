@@ -6,7 +6,7 @@ import {
   // Patch,
   Param,
   Delete,
-  BadRequestException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TerminalService } from './terminal.service';
 import { CreateTerminalDto } from './dto/create-terminal.dto';
@@ -27,21 +27,18 @@ export class TerminalController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    this.validateId(id);
-    return this.terminalService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.terminalService.findOne(id);
   }
 
-  @Get('/location/:id')
-  findAllByLocationId(@Param('id') id: string) {
-    this.validateId(id);
-    return this.terminalService.findAllByLocationId(+id);
+  @Get('/location/:locationId')
+  findAllByLocationId(@Param('id', ParseIntPipe) locationId: number) {
+    return this.terminalService.findAllByLocationId(locationId);
   }
 
   @Get('/available/service/:serviceId')
-  findTerminalByServiceId(@Param('serviceId') id: string) {
-    this.validateId(id);
-    return this.terminalService.findAllByServiceId(+id);
+  findTerminalByServiceId(@Param('serviceId', ParseIntPipe) serviceId: number) {
+    return this.terminalService.findAvailableByServiceId(serviceId);
   }
 
   // @Patch(':id')
@@ -50,14 +47,7 @@ export class TerminalController {
   //   return this.terminalService.update(+id, updateTerminalDto);
   // }
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.validateId(id);
-    return this.terminalService.remove(+id);
-  }
-
-  validateId(id: string) {
-    if (isNaN(+id)) {
-      throw new BadRequestException('Id is not a number');
-    }
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.terminalService.remove(id);
   }
 }

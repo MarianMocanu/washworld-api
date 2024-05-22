@@ -3,7 +3,7 @@ import { CreateTerminalDto } from './dto/create-terminal.dto';
 // import { UpdateTerminalDto } from './dto/update-terminal.dto';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Terminal } from './entities/terminal.entity';
+import { Terminal, TerminalStatus } from './entities/terminal.entity';
 import { UpdateTerminalDto } from './dto/update-terminal.dto';
 import { LocationsService } from 'src/locations/locations.service';
 @Injectable()
@@ -35,9 +35,9 @@ export class TerminalService {
     });
   }
 
-  findAllByServiceId(serviceId: number): Promise<Terminal[]> {
-    return this.terminalRepository.find({
-      where: { services: { id: serviceId } },
+  findAvailableByServiceId(serviceId: number): Promise<Terminal> {
+    return this.terminalRepository.findOne({
+      where: { services: { id: serviceId }, status: TerminalStatus.idle },
       relations: ['services'],
     });
   }
