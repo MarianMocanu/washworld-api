@@ -62,16 +62,12 @@ export class TerminalService {
   }
 
   async update(id: number, updateTerminalDto: UpdateTerminalDto) {
-    const foundTerminal = this.terminalRepository.findOneBy({ id });
+    const foundTerminal = await this.terminalRepository.findOneBy({ id });
     if (!foundTerminal) {
       throw new NotFoundException('Terminal not found');
     }
-
-    const terminalToSave = this.terminalRepository.create({
-      ...foundTerminal,
-      ...updateTerminalDto,
-    });
-    return await this.terminalRepository.save(terminalToSave);
+    const updatedTerminal = this.terminalRepository.merge(foundTerminal, updateTerminalDto);
+    return await this.terminalRepository.save(updatedTerminal);
   }
 
   remove(id: number): Promise<DeleteResult> {

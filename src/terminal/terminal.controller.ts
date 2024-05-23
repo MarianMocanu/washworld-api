@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  // Patch,
+  Patch,
   Param,
   Delete,
   ParseIntPipe,
@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { TerminalService } from './terminal.service';
 import { CreateTerminalDto } from './dto/create-terminal.dto';
-// import { UpdateTerminalDto } from './dto/update-terminal.dto';
+import { UpdateTerminalDto } from './dto/update-terminal.dto';
 
 @Controller('terminals')
 export class TerminalController {
@@ -47,11 +47,11 @@ export class TerminalController {
     return this.terminalService.findAllByLocationId(locationId);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateTerminalDto: UpdateTerminalDto) {
-  //   this.validateTerminalId(id);
-  //   return this.terminalService.update(+id, updateTerminalDto);
-  // }
+  @Patch(':id')
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateTerminalDto: UpdateTerminalDto) {
+    return this.terminalService.update(id, updateTerminalDto);
+  }
+
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.terminalService.remove(id);
