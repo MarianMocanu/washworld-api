@@ -42,6 +42,11 @@ export class EventController {
     return this.eventService.findAllByUserId(+userId, limit);
   }
 
+  @Get('user/:userId/count')
+  findNumberOfEventsByUserId(@Param('userId') userId: string) {
+    return this.eventService.findNumberOfEventsByUserId(+userId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
     this.validateEventId(id);
