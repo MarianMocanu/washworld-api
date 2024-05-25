@@ -50,6 +50,13 @@ export class EventService {
     return this.eventRepository.find(options);
   }
 
+  findNumberOfEventsByUserId(userId: number) {
+    const options: FindManyOptions<Event> = {
+      where: { car: { user: { id: userId } } },
+    };
+    return this.eventRepository.count(options);
+  }
+
   async findOne(id: number) {
     const foundEvent = await this.eventRepository.findOneBy({ id });
     if (!foundEvent) {
