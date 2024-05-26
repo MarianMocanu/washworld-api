@@ -37,6 +37,11 @@ export class SubscriptionController {
     return this.subscriptionService.findAllByUserId(userId);
   }
 
+  @Get('/car/:carId')
+  findSubscriptionByCarId(@Param('carId', ParseIntPipe) carId: number) {
+    return this.subscriptionService.findSubscriptionByCarId(carId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSubscriptionDto: UpdateSubscriptionDto) {
     this.validateId(id);

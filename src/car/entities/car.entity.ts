@@ -1,5 +1,6 @@
 import { Event } from 'src/event/entities/event.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Subscription } from 'src/subscription/entities/subscription.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -26,6 +27,9 @@ export class Car {
 
   @OneToMany(() => Event, event => event.car)
   events: Event[];
+
+  @OneToMany(() => Subscription, subscription => subscription.car)
+  subscriptions: Subscription;
 
   @Column()
   createdAt: Date;

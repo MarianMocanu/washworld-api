@@ -58,6 +58,14 @@ export class SubscriptionService {
     return foundSubscriptions;
   }
 
+  async findSubscriptionByCarId(carId: number) {
+    const foundSubscription = await this.subscriptionRepository.findOne({
+      where: { car: { id: carId } },
+      relations: ['level', 'level.services', 'car', 'car.user'],
+    });
+    return foundSubscription;
+  }
+
   async update(id: number, updateSubscriptionDto: UpdateSubscriptionDto) {
     const foundSubscription = await this.subscriptionRepository.findOne({
       where: { id },
