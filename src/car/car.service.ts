@@ -42,8 +42,8 @@ export class CarService {
 
   async findAllByUserId(userId: number): Promise<Car[]> {
     return await this.carRepository.find({
-      where: { user: { id: userId }, subscriptions: { active: true } },
-      relations: ['user', 'events', 'subscriptions'],
+      where: { user: { id: userId } },
+      relations: ['user', 'events', 'subscriptions', 'subscriptions.level'],
     });
   }
 
