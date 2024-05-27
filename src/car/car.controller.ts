@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  BadRequestException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
@@ -26,31 +17,22 @@ export class CarController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    this.validateSubscriptionId(id);
-    return this.carService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.carService.findOne(id);
   }
 
   @Get('user/:userId')
-  findAllByUserId(@Param('userId') userId: string) {
-    return this.carService.findAllByUserId(+userId);
+  findAllByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    return this.carService.findAllByUserId(userId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
-    this.validateSubscriptionId(id);
-    return this.carService.update(+id, updateCarDto);
-  }
-
-  validateSubscriptionId(id: string) {
-    if (isNaN(+id)) {
-      throw new BadRequestException('Subscription id is not a number');
-    }
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateCarDto: UpdateCarDto) {
+    return this.carService.update(id, updateCarDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.validateSubscriptionId(id);
-    return this.carService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.carService.remove(id);
   }
 }
