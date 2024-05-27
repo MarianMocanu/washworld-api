@@ -18,7 +18,17 @@ export class LevelsService {
   }
 
   async findAll(): Promise<Level[]> {
-    return await this.levelRepository.find();
+    return this.levelRepository
+      .createQueryBuilder('level')
+      .leftJoinAndSelect(
+        'level.services',
+        'service',
+        'service.price = (select MAX(service.price) FROM level INNER JOIN services_levels ON level.id = services_levels."levelId" INNER JOIN service ON services_levels."serviceId" = service.id WHERE services_levels."levelId" = level.id)',
+      )
+      .addOrderBy('level.price', 'ASC')
+      .leftJoinAndSelect('service.steps', 'step')
+      .addOrderBy('step.order', 'ASC')
+      .getMany();
   }
 
   async findOne(id: number): Promise<Level> {
