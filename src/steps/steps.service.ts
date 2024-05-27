@@ -18,7 +18,7 @@ export class StepsService {
   }
 
   async findAll(): Promise<Step[]> {
-    return await this.stepRepository.find({ order: { id: 'ASC' } });
+    return await this.stepRepository.find({ order: { order: 'ASC' } });
   }
 
   // findOne(id: number) {
