@@ -53,7 +53,15 @@ describe('Events Controller (e2e)', () => {
       expect(response.body).toBeDefined();
       expect(Array.isArray(response.body)).toBe(true);
     });
+
+    it('should return 400 status code if ID is not a string', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/events/a99')
+        .set('Authorization', token);
+      expect(response.statusCode).toBe(400);
+    });
   });
+
   describe('/events (POST)', () => {
     it('should return 404 status code if IDs are not found', async () => {
       const eventDTO = new CreateEventDto(9999, 9999, 9999);

@@ -34,8 +34,7 @@ export class EventController {
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    this.validateEventId(id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.eventService.findOne(+id);
   }
 
