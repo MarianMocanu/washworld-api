@@ -1,22 +1,35 @@
-import { Controller, Get, Post, Body, Param, Delete, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  BadRequestException,
+  UseGuards,
+} from '@nestjs/common';
 import { LevelsService } from './levels.service';
 import { CreateLevelDto } from './dto/create-level.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 // import { UpdateLevelDto } from './dto/update-level.dto';
 
 @Controller('levels')
 export class LevelsController {
   constructor(private readonly levelsService: LevelsService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   create(@Body() createLevelDto: CreateLevelDto) {
     return this.levelsService.create(createLevelDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.levelsService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     this.validateLevelId(id);
@@ -28,6 +41,7 @@ export class LevelsController {
   //   return this.levelsService.update(+id, updateLevelDto);
   // }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.levelsService.remove(+id);
