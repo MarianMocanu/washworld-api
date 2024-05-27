@@ -23,9 +23,11 @@ export class LevelsService {
       .leftJoinAndSelect(
         'level.services',
         'service',
-        'service.price = (SELECT MAX(service.price) FROM service WHERE service.levelId = level.id)',
+        'service.price = (select MAX(service.price) FROM level INNER JOIN services_levels ON level.id = services_levels."levelId" INNER JOIN service ON services_levels."serviceId" = service.id WHERE services_levels."levelId" = level.id)',
       )
+      .addOrderBy('level.price', 'ASC')
       .leftJoinAndSelect('service.steps', 'step')
+      .addOrderBy('step.order', 'ASC')
       .getMany();
   }
 
