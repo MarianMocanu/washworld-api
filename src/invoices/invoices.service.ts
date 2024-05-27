@@ -38,7 +38,18 @@ export class InvoicesService {
     return this.invoiceRepository.save(updatedInvoice);
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} invoice`;
-  // }
+  async remove(id: number) {
+    const foundInvoice = await this.invoiceRepository.findOneBy({ id });
+    if (!foundInvoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+    return this.invoiceRepository.remove(foundInvoice);
+  }
+
+  async removeByEventId(eventId: number) {
+    const foundInvoice = await this.invoiceRepository.find({
+      where: { event: { id: eventId } },
+    });
+    return this.invoiceRepository.remove(foundInvoice);
+  }
 }

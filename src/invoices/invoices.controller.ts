@@ -7,6 +7,8 @@ import {
   Param,
   BadRequestException,
   UseGuards,
+  Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
@@ -43,10 +45,19 @@ export class InvoicesController {
     return this.invoicesService.update(+id, updateInvoiceDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.invoicesService.remove(+id);
-  // }
+  @UseGuards(AuthGuard)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    this.validateInvoiceId(id);
+    return this.invoicesService.remove(+id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('/event/:eventId')
+  removeByEventId(@Param('eventId', ParseIntPipe) eventId: number) {
+    return this.invoicesService.removeByEventId(eventId);
+  }
+
   validateInvoiceId(id: string) {
     if (isNaN(+id)) {
       throw new BadRequestException('Invoice id is not a number');
