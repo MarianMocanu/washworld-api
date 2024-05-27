@@ -10,15 +10,19 @@ import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginDto } from 'src/auth/dto/login.dto';
 import { InvoicesService } from 'src/invoices/invoices.service';
+import { Car } from 'src/car/entities/car.entity';
+import { CarService } from 'src/car/car.service';
 
 describe('Events Controller (e2e)', () => {
   let app: INestApplication;
-  let eventsService: EventService;
   let invoicesService: InvoicesService;
+  let eventsService: EventService;
+  let carService: CarService;
   let userService: UserService;
   let authService: AuthService;
   let token: string;
   let user: User;
+  let car: Car;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -29,6 +33,7 @@ describe('Events Controller (e2e)', () => {
     invoicesService = moduleFixture.get<InvoicesService>(InvoicesService);
     userService = moduleFixture.get<UserService>(UserService);
     authService = moduleFixture.get<AuthService>(AuthService);
+    carService = moduleFixture.get<CarService>(CarService);
 
     // Sign up
     const userDTO = new CreateUserDto('test', 'user', 'testuser@mail.com', '12345');
@@ -38,6 +43,9 @@ describe('Events Controller (e2e)', () => {
     const loginDTO = new LoginDto('test4@mail.com', '12345');
     const loginResponse = await authService.login(loginDTO);
     token = loginResponse.token;
+
+    // Add a car
+    car = await carService.create({ plateNumber: 'AZ98765', name: 'Testcar', userId: 1 });
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
@@ -73,7 +81,7 @@ describe('Events Controller (e2e)', () => {
     });
 
     it('should return 201 and the new event after creation', async () => {
-      const eventDTO = new CreateEventDto(3, 1, 1);
+      const eventDTO = new CreateEventDto(1, 1, 1);
       const response = await request(app.getHttpServer())
         .post('/events')
         .set('Authorization', token)
@@ -139,6 +147,7 @@ describe('Events Controller (e2e)', () => {
   });
 
   afterAll(async () => {
+    await carService.remove(car.id);
     await userService.remove(user.id);
     await app.close();
   });
