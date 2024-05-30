@@ -55,7 +55,7 @@ export class TerminalService {
       .leftJoinAndSelect(
         'service.levels',
         'level',
-        'level.id = (SELECT MAX(id) FROM level INNER JOIN services_levels ON level.id = services_levels."levelId" WHERE services_levels."serviceId" = service.id)',
+        'level.id = (SELECT MIN(id) FROM level INNER JOIN services_levels ON level.id = services_levels."levelId" WHERE services_levels."serviceId" = service.id)',
       )
       .where('terminal.locationId = :locationId', { locationId })
       .getMany();
