@@ -25,10 +25,12 @@ describe('User Controller (e2e)', () => {
     userService = moduleFixture.get<UserService>(UserService);
     authService = moduleFixture.get<AuthService>(AuthService);
 
-    const userDTO = new CreateUserDto('John', 'Doe', 'mail@john.com', 'qwerty');
+    // Sign up
+    const userDTO = new CreateUserDto('test', 'user', 'testuser9@mail.com', '12345');
     user = await userService.create(userDTO);
 
-    const loginDTO = new LoginDto('mail@john.com', 'qwerty');
+    // Log in
+    const loginDTO = new LoginDto('testuser9@mail.com', '12345');
     const loginResponse = await authService.login(loginDTO);
     token = loginResponse.token;
 
@@ -37,18 +39,18 @@ describe('User Controller (e2e)', () => {
     await app.init();
   });
 
-  describe('/user (POST)', () => {
+  describe('/auth/signup (POST)', () => {
     it('should return 400 status code if invalid data', async () => {
       const invalidUser = { ...userDTO, email: 222 };
 
-      const response = await request(app.getHttpServer()).post('/user').send(invalidUser);
+      const response = await request(app.getHttpServer()).post('/auth/signup').send(invalidUser);
 
       expect(response.statusCode).toBe(400);
     });
 
     it('should return 201 and the new user after creation', async () => {
-      const newUserDTO = new CreateUserDto('John', 'Doe', 'testemail@john.com', 'qwerty');
-      const response = await request(app.getHttpServer()).post('/user').send(newUserDTO);
+      const newUserDTO = new CreateUserDto('John', 'Doe', '1234@john.com', 'qwerty');
+      const response = await request(app.getHttpServer()).post('/auth/signup').send(newUserDTO);
 
       expect(response.statusCode).toBe(201);
       expect(response.body).toBeDefined();
@@ -80,7 +82,9 @@ describe('User Controller (e2e)', () => {
       const newUserDTO = new CreateUserDto('John', 'Doe', 'testemail@john.com', 'qwerty');
       const newUser = await userService.create(newUserDTO);
 
-      const response = await request(app.getHttpServer()).get(`/user/${newUser.id}`);
+      const response = await request(app.getHttpServer())
+        .get(`/user/${newUser.id}`)
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeDefined();
@@ -109,7 +113,7 @@ describe('User Controller (e2e)', () => {
     });
 
     it('should return 400 status code if invalid data', async () => {
-      const newUserDTO = new CreateUserDto('John', 'Doe', 'testemail@john.com', 'qwerty');
+      const newUserDTO = new CreateUserDto('John', 'Doe', 'testemail2@john.com', 'qwerty');
       const newUser = await userService.create(newUserDTO);
       const invalidUser = { ...newUser, firstName: 1234 };
 
@@ -124,7 +128,7 @@ describe('User Controller (e2e)', () => {
     });
 
     it('should return 200 and the updated data', async () => {
-      const newUserDTO = new CreateUserDto('John', 'Doe', 'testemail@john.com', 'qwerty');
+      const newUserDTO = new CreateUserDto('John', 'Doe', 'testemail3@john.com', 'qwerty');
       const newUser = await userService.create(newUserDTO);
       const updatedUser = { ...newUser, firstName: 'updated firstName' };
 
@@ -151,7 +155,9 @@ describe('User Controller (e2e)', () => {
     });
 
     it('should return 404 if user not found', async () => {
-      const response = await request(app.getHttpServer()).delete('/user/999999');
+      const response = await request(app.getHttpServer())
+        .delete('/user/999999')
+        .set('Authorization', token);
       expect(response.statusCode).toBe(404);
       expect(response.body.message).toBe('User not found');
     });
