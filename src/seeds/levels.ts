@@ -4,6 +4,14 @@ import * as dotenv from 'dotenv';
 import { CreateLevelDto } from 'src/levels/dto/create-level.dto';
 import { Level } from 'src/levels/entities/level.entity';
 import { Service, ServiceType } from 'src/service/entities/service.entity';
+import { Subscription } from 'src/subscription/entities/subscription.entity';
+import { Car } from 'src/car/entities/car.entity';
+import { User } from 'src/user/entities/user.entity';
+import { Event } from 'src/event/entities/event.entity';
+import { Terminal } from 'src/terminal/entities/terminal.entity';
+import { Invoice } from 'src/invoices/entities/invoice.entity';
+import { Step } from 'src/steps/entities/step.entity';
+import { Location } from 'src/locations/entities/location.entity';
 
 dotenv.config();
 
@@ -24,7 +32,7 @@ async function seed() {
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
-    entities: ['dist/**/*.entity{.ts,.js}'],
+    entities: [Level, Subscription, Service, Car, User, Event, Terminal, Location, Invoice, Step],
   });
 
   const connection = await AppDataSource.initialize();
@@ -48,10 +56,12 @@ async function seed() {
       order: { price: 'ASC' },
     });
 
+    const servicesLength = automatedServices.length;
+
     for (const [index, service] of automatedServices.entries()) {
       service.levels = await levelRepository.find({
-        order: { id: 'ASC' },
-        take: index + 1,
+        order: { id: 'DESC' },
+        take: servicesLength - index,
       });
       const serviceWithLevels = await serviceRepository.save(service);
       console.log(
