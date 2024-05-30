@@ -28,11 +28,11 @@ describe('Terminal Controller (e2e)', () => {
     terminalService = moduleFixture.get<TerminalService>(TerminalService);
 
     // Sign up
-    const userDTO = new CreateUserDto('test', 'user', 'testuser@mail.com', '12345');
+    const userDTO = new CreateUserDto('test', 'user', 'testuser8@mail.com', '12345');
     user = await userService.create(userDTO);
 
     // Log in
-    const loginDTO = new LoginDto('test4@mail.com', '12345');
+    const loginDTO = new LoginDto('testuser8@mail.com', '12345');
     const loginResponse = await authService.login(loginDTO);
     token = loginResponse.token;
 

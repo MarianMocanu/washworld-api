@@ -37,11 +37,11 @@ describe('Events Controller (e2e)', () => {
     carService = moduleFixture.get<CarService>(CarService);
 
     // Sign up
-    const userDTO = new CreateUserDto('test', 'user', 'testuser@mail.com', '12345');
+    const userDTO = new CreateUserDto('test', 'user', 'testuser3@mail.com', '12345');
     user = await userService.create(userDTO);
 
     // Log in
-    const loginDTO = new LoginDto('test4@mail.com', '12345');
+    const loginDTO = new LoginDto('testuser3@mail.com', '12345');
     const loginResponse = await authService.login(loginDTO);
     token = loginResponse.token;
 
@@ -125,7 +125,7 @@ describe('Events Controller (e2e)', () => {
     });
 
     it('should return 200 and the updated data', async () => {
-      const newUserDTO = new CreateUserDto('John', 'Doe', 'testemail@john.com', 'qwerty');
+      const newUserDTO = new CreateUserDto('John', 'Doe', 'testemail6@john.com', 'qwerty');
       const newUser = await userService.create(newUserDTO);
       const updatedUser = { ...newUser, firstName: 'updated firstName' };
 

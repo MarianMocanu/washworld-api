@@ -27,11 +27,11 @@ describe('Level Controller (e2e)', () => {
     levelsService = moduleFixture.get<LevelsService>(LevelsService);
 
     // Sign up
-    const userDTO = new CreateUserDto('test', 'user', 'testuser@mail.com', '12345');
+    const userDTO = new CreateUserDto('test', 'user', 'testuser4@mail.com', '12345');
     user = await userService.create(userDTO);
 
     // Log in
-    const loginDTO = new LoginDto('test4@mail.com', '12345');
+    const loginDTO = new LoginDto('testuser4@mail.com', '12345');
     const loginResponse = await authService.login(loginDTO);
     token = loginResponse.token;
 
